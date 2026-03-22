@@ -1,21 +1,37 @@
 package game;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import client.Client;
+import utils.Ler;
+import utils.Menus;
 
 public class Game {
 
 	public static void main(String[] args) {
 		
-		Client teste = new Client();
-		Socket ClientSocket = teste.getSocket();
-		try {
-			ClientSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		Client client = new Client();
+		
+		System.out.println(Menus.printMenuInicial());
+		
+		boolean gate = true;
+		while(gate) {
+			int choice = Ler.umInt();
+			switch (choice) {
+				case 1:
+					System.out.println("TODO");
+					gate = false;
+					break;
+				case 2:
+					System.out.println("TODO");
+					gate = false;
+					break;
+				case 9:
+					System.exit(0);
+				default:
+					System.out.println(Menus.printMenuInicial());
+			}
 		}
+				
+
 		
 	}
 }

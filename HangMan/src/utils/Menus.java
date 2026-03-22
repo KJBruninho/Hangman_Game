@@ -2,20 +2,11 @@ package utils;
 
 import java.util.ArrayList;
 
-public class Menus {
-
-    // REMOVER
-    public static void main(String[] args) {
-        System.out.println(printMenuInicial());
-
-        ArrayList<String> letras = new ArrayList<>();
-        letras.add("a");
-
-        System.out.println(printLetrasTentadas(letras));
-        System.out.println(STAGES[0]);
-        System.out.println(printVida(5));
-        System.out.println(printFimJogo(true, "JAVA"));
-    }
+public final class Menus {
+	
+	private Menus(){
+		throw new UnsupportedOperationException("Can't make an instance Obj of this class!");
+	}
 
     public static String printMenuInicial() {
         StringBuilder sb = new StringBuilder();
@@ -34,7 +25,7 @@ public class Menus {
         sb.append("\n").append("=".repeat(49)).append("\n");
         sb.append(" [1] Entrar no Lobby.\n");
         sb.append(" [2] HighScores.\n");
-        sb.append(" [0] Sair.\n");
+        sb.append(" [9] Sair.\n");
         sb.append("_".repeat(49));
 
         return sb.toString();
@@ -134,7 +125,6 @@ public class Menus {
     public static String printVida(int vidasRestantes) {
         int maxVidas = 7;
         StringBuilder barra = new StringBuilder();
-
         for (int i = 0; i < maxVidas; i++) {
             if (i < vidasRestantes) {
                 barra.append(" [♥] ");
@@ -143,7 +133,7 @@ public class Menus {
             }
         }
 
-        return " VIDAS: " + barra.toString();
+        return STAGES[maxVidas-vidasRestantes] + "\n VIDAS: " + barra.toString();
     }
 
     public static String printFimJogo(boolean ganhou, String palavraCorreta) {
