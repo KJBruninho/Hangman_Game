@@ -3,6 +3,8 @@ package server;
 import java.io.*;
 import java.net.*;
 
+import client.Connection;
+
 public class Server {
 
 	private ServerSocket ss;
@@ -21,7 +23,7 @@ public class Server {
 		try {
 			ss = new ServerSocket(5432);
 			if(ss.isBound()) {
-				System.out.println("Servidor online!");
+				System.out.println("Servidor online! \n");
 			}
 			while(true) {
 				s  = ss.accept();
@@ -31,7 +33,7 @@ public class Server {
 				c  = new Connection(s);
 				c.start();
 				if(c.isAlive()) {
-					System.out.println("Thread iniciada!");	
+					System.out.println("Thread iniciada!" + c.getName());	
 				} 					
 			}
 				

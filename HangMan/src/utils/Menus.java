@@ -4,123 +4,118 @@ import java.util.ArrayList;
 
 public class Menus {
 
-	//REMOVER
+    // REMOVER
     public static void main(String[] args) {
-    	printMenuInicial();
-    	ArrayList<String> letras = new ArrayList<String>();
-    	letras.add("a");
-    	printLetrasTentadas(letras);
-    	System.out.println(STAGES[0]);
+        System.out.println(printMenuInicial());
+
+        ArrayList<String> letras = new ArrayList<>();
+        letras.add("a");
+
+        System.out.println(printLetrasTentadas(letras));
+        System.out.println(STAGES[0]);
+        System.out.println(printVida(5));
+        System.out.println(printFimJogo(true, "JAVA"));
     }
 
-    public static void printMenuInicial() {
-        System.out.println("\n" + "=".repeat(49));
-        System.out.println(" _                                            		\r\n"
-        				 + "| |                                          		\r\n"
-        				 + "| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __  	  	\r\n"
-        				 + "| '_ \\ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\ 	\r\n"
-        				 + "| | | | (_| | | | | (_| | | | | | | (_| | | | |		\r\n"
-        				 + "|_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|	\r\n"
-        				 + "                    __/ |                      		\r\n"
-        				 + "                   |___/                  				");
-        System.out.println("=".repeat(49));
-        System.out.println(" [1] Entrar no Lobby.");
-        System.out.println(" [2] HighScores.");
-        System.out.println(" [0] Sair.");
-        System.out.println("_".repeat(49));
+    public static String printMenuInicial() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n").append("=".repeat(49)).append("\n");
+        sb.append(
+                " _                                            \n" +
+                "| |                                           \n" +
+                "| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __\n" +
+                "| '_ \\ / _` | '_ \\ / _` | '_ ` _ \\ / _` | '_ \\\n" +
+                "| | | | (_| | | | | (_| | | | | | | (_| | | | |\n" +
+                "|_| |_|\\__,_|_| |_|\\__, |_| |_| |_|\\__,_|_| |_|\n" +
+                "                    __/ |\n" +
+                "                   |___/\n"
+        );
+        sb.append("\n").append("=".repeat(49)).append("\n");
+        sb.append(" [1] Entrar no Lobby.\n");
+        sb.append(" [2] HighScores.\n");
+        sb.append(" [0] Sair.\n");
+        sb.append("_".repeat(49));
+
+        return sb.toString();
     }
-    
+
     public static final String[] STAGES = {
-            
-            """
-              ____
-             |/   |
-             |    
-             |    
-             |    
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |    
-             |    
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |    |
-             |    
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |    |
-             |    |
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |   /|
-             |    |
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |   /|\\
-             |    |
-             |    
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |   (_)
-             |   /|\\
-             |    |
-             |   / 
-            _|_____
-            """,
-
-            
-            """
-              ____
-             |/   |
-             |  (X_X)
-             |   /|\\
-             |    |
-             |   / \\
-            _|_____
-            """
+        """
+          ____
+         |/   |
+         |    
+         |    
+         |    
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |    
+         |    
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |    |
+         |    
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |    |
+         |    |
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |   /|
+         |    |
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |   /|\\
+         |    |
+         |    
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |   (_)
+         |   /|\\
+         |    |
+         |   / 
+        _|_____
+        """,
+        """
+          ____
+         |/   |
+         |  (X_X)
+         |   /|\\
+         |    |
+         |   / \\
+        _|_____
+        """
     };
-    
-    public static void printLetrasTentadas(ArrayList<String> letras) {
+
+    public static String printLetrasTentadas(ArrayList<String> letras) {
         StringBuilder barra = new StringBuilder();
 
         if (letras.isEmpty()) {
@@ -133,38 +128,41 @@ public class Menus {
             }
         }
 
-        System.out.println(" LETRAS TENTADAS: " + barra.toString());
-    }
-  
-    public static void printVida(int vidasRestantes) {
-    	int maxVidas = 7;
-    	StringBuilder barra = new StringBuilder();
-            
-    	for (int i = 0; i < maxVidas; i++) {
-    		if (i < vidasRestantes) {
-    			barra.append(" [♥] "); 
-    		} else {
-    			barra.append(" [♡] "); 
-    		}
-    	}
-
-        System.out.println(" VIDAS: " + barra.toString());
+        return " LETRAS TENTADAS: " + barra.toString();
     }
 
+    public static String printVida(int vidasRestantes) {
+        int maxVidas = 7;
+        StringBuilder barra = new StringBuilder();
 
-
-    public static void printFimJogo(boolean ganhou, String palavraCorreta) {
-    	System.out.println("   A palavra era: " + palavraCorreta);
-    	System.out.println("\n" + "=".repeat(49));
-    	System.out.println("\n" + "=".repeat(49));
-        if (ganhou) {
-            System.out.println("   ★ PARABÉNS! VOCÊ SOBREVIVEU  ★");
-        } else {
-            System.out.println("   		  GAME OVER!!! ");
+        for (int i = 0; i < maxVidas; i++) {
+            if (i < vidasRestantes) {
+                barra.append(" [♥] ");
+            } else {
+                barra.append(" [♡] ");
+            }
         }
-        System.out.println("=".repeat(49));
-        System.out.println(" [1] Jogar Novamente");
-        System.out.println(" [0] Menu Inicial");
-        System.out.println("_".repeat(49));
+
+        return " VIDAS: " + barra.toString();
+    }
+
+    public static String printFimJogo(boolean ganhou, String palavraCorreta) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nA palavra era: ").append(palavraCorreta).append("\n");
+        sb.append("\n").append("=".repeat(49)).append("\n");
+
+        if (ganhou) {
+            sb.append("  	  ★ PARABÉNS! VOCÊ SOBREVIVEU  ★\n");
+        } else {
+            sb.append("            	  GAME OVER!!!			\n");
+        }
+
+        sb.append("=".repeat(49)).append("\n");
+        sb.append(" [1] Jogar Novamente\n");
+        sb.append(" [0] Menu Inicial\n");
+        sb.append("_".repeat(49));
+
+        return sb.toString();
     }
 }
