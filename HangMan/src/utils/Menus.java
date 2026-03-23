@@ -7,8 +7,33 @@ public final class Menus {
 	private Menus(){
 		throw new UnsupportedOperationException("Can't make an instance Obj of this class!");
 	}
+	
+	public static String printMenuLobby() {
+        StringBuilder sb = new StringBuilder();
 
-    public static String printMenuInicial() {
+        sb.append("\n").append("=".repeat(49)).append("\n");
+        sb.append(
+        	    		" 	 _       _     _            	\n" +
+        	    	    "	| |     | |   | |           	\n" +
+        	    	    "	| | ___ | |__ | |__  _   _  	\n" +
+        	    	    "	| |/ _ \\| '_ \\| '_ \\| | | |  \n" +
+        	    	    "	| | (_) | |_) | |_) | |_| | 	\n" +
+        	    	    "	|_|\\___/|_.__/|_.__/ \\__, | 	\n" +
+        	    	    " 	                     __/  | 	\n" +
+        	    	    "	                     |___/  	\n"
+        );
+        sb.append("\n").append("=".repeat(49)).append(	"\n");
+        sb.append(" [1] Jogo individual. 		 		 \n");
+        sb.append(" [2] Juntar-me a um jogo.			 \n");
+        sb.append(" [3] Criar um jogo. (max 4 jogadores) \n");
+        sb.append(" [9] Sair.							 \n");
+        sb.append("_".repeat(49));
+
+        return sb.toString();
+    }
+		
+	
+    public static String printGameLogo() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\n").append("=".repeat(49)).append("\n");
@@ -23,10 +48,7 @@ public final class Menus {
                 "                   |___/\n"
         );
         sb.append("\n").append("=".repeat(49)).append("\n");
-        sb.append(" [1] Entrar no Lobby.\n");
-        sb.append(" [2] HighScores.\n");
-        sb.append(" [9] Sair.\n");
-        sb.append("_".repeat(49));
+
 
         return sb.toString();
     }

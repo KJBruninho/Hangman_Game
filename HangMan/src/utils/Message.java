@@ -17,9 +17,13 @@ public final class Message {
 		os.flush();
 	}
 	
-	public static void receiveMessage(Socket s) throws IOException, ClassNotFoundException {
+	public static Object receiveMessage(Socket s) throws IOException, ClassNotFoundException {
 		ObjectInputStream is = new ObjectInputStream(s.getInputStream());
-		System.out.println(is.readObject());
+		return is.readObject();
+	}
+	
+	public static void closeSocket(Socket s) throws IOException {
+		s.close();
 	}
 
 }

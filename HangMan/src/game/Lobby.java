@@ -1,41 +1,90 @@
 package game;
 
-import client.Client;
+import java.io.IOException;
+import java.net.Socket;
 
-public class Lobby {
-    
-	private final int MAX_CAPACITY = 4;
-    private final int UNIQUE_ID;
-    private Client[] players;
-    private int capacity;      
-    private int numPlayers;   
-    
-    public Lobby(int size, int roomID) {
-        this.UNIQUE_ID = roomID;
-        if(size>MAX_CAPACITY) {
-        	this.capacity = MAX_CAPACITY;  
-        	System.out.println("\n Tamanho da sala ultrapassado! Ajustado para 4 jogadores.");
-        }
-        this.players = new Client[size];
-        this.numPlayers = 0;
-    }
+import utils.Menus;
+import utils.Message;
 
-    private boolean isFull() {
-        return numPlayers >= capacity;
-    }
-    
+public class Lobby extends Thread{
+	
+	private Socket 	s;
+	private Game 	room;	
+	private Game[] 	rooms 	 = new Game[10000];//Provavelmente extremamente overkill
+	private int 	numRooms = 0;
 
-    public void enterLobby(Client player) {
-        if (isFull()) {
-            System.out.println("Sala " + UNIQUE_ID + " cheia!");
-        } else {
-            players[numPlayers] = player;
-            numPlayers++;
-            System.out.println("Jogador adicionado. Total: " + numPlayers + "/" + capacity);
-        }
-    }
+	//Constructors
+	public Lobby(Socket s) {
+		this.s = s;
+	}
+	
+	public Lobby(int size, Socket s) {
+		this.s = s;
+		room = new Game(size,generateUNIQUE_ID());
+		rooms[numRooms] = room;
+		numRooms++;
+	}
+	
+	//Methods
+	private int generateUNIQUE_ID() {
+	    int id;
+	    boolean existe;
+	    
+	    do {
+	        existe = false;
+	        id = (int) (Math.random() * 100000000);
+	        if(!(numRooms==0)) {	        	
+		        for (Game room : rooms) {
+		            if (room.getUNIQUE_ID() == id) {
+		                existe = true;
+		                break;
+		            }
+		        }
+	        }
+	    } while (existe);
+	    
+	    return id;
+	}
+	
+	//TODO: Test and check logic
+	public String escolhaMenu(int choice, Socket s) throws IOException, ClassNotFoundException {
 
-    public int getUNIQUE_ID() {
-    	return UNIQUE_ID; }
-    
+			switch (choice) {
+				case 1:
+					Message.sendMessage(Menus.printGameLogo(), s);
+					new Game(1,generateUNIQUE_ID());
+					break;
+				case 2:
+					Message.sendMessage(Menus.printGameLogo(), s);
+					Message.sendMessage("Introduza o numero da sala: ", s);
+					
+					break;
+				case 3:
+					Message.sendMessage("Escolha o tamanho da sala: ", s);
+					int size =(int) Message.receiveMessage(s);
+					Game game = new Game(size, generateUNIQUE_ID());
+					break;
+				case 9:
+					System.exit(0);
+				default:
+					Message.sendMessage(Menus.printMenuLobby(), s);
+			}
+
+		return null;	
+	}
+	
+	@Override
+	public void run() {
+		try {
+			Message.sendMessage(Menus.printMenuLobby(), s);
+			while(true) {
+				int choice = (int) Message.receiveMessage(s);
+				escolhaMenu(choice,s);	
+			}		
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

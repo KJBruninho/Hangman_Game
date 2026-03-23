@@ -29,7 +29,10 @@ public class Word {
     	
     	try {
         	List<String> linhas = Files.readAllLines(Paths.get("palavras.txt"));
-            palavra = linhas.get(escolha).split("");         
+        	if (!linhas.isEmpty()) {
+                escolha = (int) (Math.random() * linhas.size());
+                palavra = linhas.get(escolha).trim().split("");
+            }     
         } catch (IOException e) {
             System.out.println(e);
         }
