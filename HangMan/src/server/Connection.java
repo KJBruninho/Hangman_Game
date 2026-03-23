@@ -34,7 +34,7 @@ public class Connection extends Thread {
 	@Override
     public void run () {
     	try {
-    		Message.sendMessage("	Novo jogador! Seja bem-vindo.\n", s);
+    		Message.sendMessage("	Novo jogador! Seja bem-vindo.", s);
     		Message.sendMessage("	O jogo comecara em breve.", s);
     		Message.sendMessage("	A entrar num Lobby...", s);
     		setLobby(new Lobby(s));

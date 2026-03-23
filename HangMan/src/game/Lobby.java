@@ -42,6 +42,7 @@ public class Lobby extends Thread{
 					new Game(size, s);
 					break;
 				case 9:
+					Message.closeSocket(s);
 					System.exit(0);
 				default:
 					Message.sendMessage(Menus.printMenuLobby(), s);
@@ -54,8 +55,8 @@ public class Lobby extends Thread{
 		try {
 			Message.sendMessage(Menus.printMenuLobby(), s);
 			while(true) {
-				int choice = (int) Message.receiveMessage(s);
-				escolhaMenu(choice,s);	
+                int choice = Integer.parseInt((String) Message.receiveMessage(s));
+                escolhaMenu(choice, s);
 			}		
 		} catch (IOException e) {
 			e.printStackTrace();
