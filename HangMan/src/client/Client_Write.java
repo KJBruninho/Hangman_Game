@@ -1,15 +1,16 @@
 package client;
 
 import java.net.Socket;
-import utils.Ler;
+import java.util.Scanner;
 import utils.Message;
 
 public class Client_Write extends Thread {
     private Socket s;
+    private Scanner sc;
 
     public Client_Write(Socket s) {
-    	super();
         this.s = s;
+        this.sc = new Scanner(System.in);
         start();
     }
 
@@ -17,11 +18,13 @@ public class Client_Write extends Thread {
     public void run() {
         try {
             while (!s.isClosed()) {
-                int choice = Ler.umInt();
-                Message.sendMessage(String.valueOf(choice), s);
+                String input = sc.nextLine(); 
+                Message.sendMessage(input, s);
             }
         } catch (Exception e) {
             System.out.println("Escrita terminada: " + e.getMessage());
+        } finally {
+            sc.close();
         }
     }
 }

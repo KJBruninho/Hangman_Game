@@ -48,11 +48,12 @@ public class Word {
     }
     
     
-    public boolean guessWord(Word guess) {
-    	if(this.equals(guess)) {
-    		return true;
+    public Word guessWord(Word guess) {
+    	if(this.getWord().equals(guess.getGuess())) {
+    		this.guess = Arrays.copyOf(guess.guess, 5);
     	}
-    	return false;
+    	
+		return guess;
     }
     
     public String[] guessLetter(String letter) {
@@ -83,7 +84,7 @@ public class Word {
     	return Arrays.toString(guess);
     }
     
-
+   
     @Override
     public String toString() {
     	return String.join("", this.palavra).toLowerCase();
