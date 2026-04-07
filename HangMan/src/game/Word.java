@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Arrays;
 
 public class Word {
 
@@ -63,6 +64,23 @@ public class Word {
         }
 
         return guess;
+    }
+    
+    public boolean isGuessed() {
+        for (int i = 0; i < palavra.length; i++) {
+            if (!palavra[i].equalsIgnoreCase(guess[i])) {
+                return false; 
+            }
+        }
+        return true;
+    }
+    
+    public String getWord() {
+    	return Arrays.toString(palavra);
+    }
+    
+    public String getGuess() {
+    	return Arrays.toString(guess);
     }
     
 

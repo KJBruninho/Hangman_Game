@@ -28,8 +28,10 @@ public class Lobby extends Thread{
 			switch (choice) {
 				case 1:
 					Message.sendMessage(Menus.printGameLogo(), s);
-					new Game(1,s);
+					Game game = new Game(1,s);
+					game.runSinglePlayerGame();
 					break;
+					
 				case 2:
 					Message.sendMessage(Menus.printGameLogo(), s);
 					Message.sendMessage("Introduza o numero da sala: ", s);

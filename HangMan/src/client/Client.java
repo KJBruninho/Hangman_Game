@@ -25,6 +25,9 @@ public class Client {
         }
     }
 
+    public Socket getSocket() {
+    	return s;
+    }
     public synchronized void incScore() { 
     	score++; 
     }
