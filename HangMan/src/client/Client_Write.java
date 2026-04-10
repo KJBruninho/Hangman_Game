@@ -1,16 +1,18 @@
 package client;
 
+import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
+
+import utils.Ler;
 import utils.Message;
 
 public class Client_Write extends Thread {
     private Socket s;
-    private Scanner sc;
+    private Message msg;
 
-    public Client_Write(Socket s) {
+    public Client_Write(Socket s,Message msg) throws IOException {
         this.s = s;
-        this.sc = new Scanner(System.in);
+        this.msg = msg;
         start();
     }
 
@@ -18,13 +20,11 @@ public class Client_Write extends Thread {
     public void run() {
         try {
             while (!s.isClosed()) {
-                String input = sc.nextLine(); 
-                Message.sendMessage(input, s);
+            	String input = Ler.umaString();
+                msg.send(input);
             }
         } catch (Exception e) {
             System.out.println("Escrita terminada: " + e.getMessage());
-        } finally {
-            sc.close();
-        }
+        } 
     }
 }
