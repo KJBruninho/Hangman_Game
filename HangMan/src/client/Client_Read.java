@@ -4,12 +4,12 @@ import java.net.Socket;
 import utils.Message;
 
 public class Client_Read extends Thread {
-	
     private Socket s;
+    private Message msg;
 
-    public Client_Read(Socket s) {
-    	super();
+    public Client_Read(Socket s, Message msg) {
         this.s = s;
+        this.msg = msg;
         start();
     }
 
@@ -17,14 +17,13 @@ public class Client_Read extends Thread {
     public void run() {
         try {
             while (!s.isClosed()) {
-                Object msg = Message.receiveMessage(s);
-                if (msg != null) {
-                    System.out.println("\n[Servidor]: " + msg);
-                    System.out.print("> ");
+                Object received = msg.receive();
+                if (received != null) {
+                    System.out.println(received.toString());
                 }
             }
         } catch (Exception e) {
-            System.out.println("Leitura terminada: " + e.getMessage());
+            System.out.println("Conexão encerrada.");
         }
     }
 }

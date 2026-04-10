@@ -34,13 +34,14 @@ public class Connection extends Thread {
 	@Override
     public void run () {
     	try {
-    		Message.sendMessage("	Novo jogador! Seja bem-vindo.", s);
-    		Message.sendMessage("	O jogo comecara em breve.", s);
-    		Message.sendMessage("	A entrar num Lobby...", s);
-    		setLobby(new Lobby(s));
+    		Message msg = new Message(s);
+    		msg.send("	Novo jogador! Seja bem-vindo.");
+    		msg.send("	O jogo comecara em breve.");
+    		msg.send("	A entrar num Lobby...");
+    		setLobby(new Lobby(s,msg));
     		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
-}
+} 

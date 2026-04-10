@@ -5,104 +5,98 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Word {
 
     private String[] palavra;
-    private String[] guess = new String[5];
-    private int escolha;
+    private String[] guess;
+    private static final String FILE_PATH = "palavras.txt";
+    private static final Random RANDOM = new Random();
 
-    //Remover
-	public static void main(String[] args ) throws ClassNotFoundException, IOException {
-		Word palavra = new Word();
-		palavra.guessLetter("o");
-		System.out.println(palavra.printGuess());
-	}
-	
-
-	//Constructors
-    public Word() {    	
-    	escolha = (int) (Math.random() * 100); 
-
-    	for (int i = 0; i < 5 ; i++) {
-    	    guess[i] = "_";
-    	}
-    	
-    	try {
-        	List<String> linhas = Files.readAllLines(Paths.get("palavras.txt"));
-        	if (!linhas.isEmpty()) {
-                escolha = (int) (Math.random() * linhas.size());
-                palavra = linhas.get(escolha).trim().split("");
-            }     
+    /**
+     * Construtor que lê uma palavra aleatória do ficheiro.
+     */
+    public Word() {
+        try {
+            List<String> linhas = Files.readAllLines(Paths.get(FILE_PATH));
+            if (linhas.isEmpty()) {
+                throw new IOException("O ficheiro de palavras está vazio.");
+            }
+            String escolhida = linhas.get(RANDOM.nextInt(linhas.size())).trim();
+            this.palavra = escolhida.split("");
         } catch (IOException e) {
-            System.out.println(e);
+            System.err.println("Erro ao carregar palavras: " + e.getMessage());
+            this.palavra = new String[]{"j", "a", "v", "a"}; // Fallback
         }
+        
+        this.guess = new String[palavra.length];
+        Arrays.fill(this.guess, "_");
     }
-    
-    public Word(String guess) {
-    	this.guess = guess.toLowerCase().split("");
+
+    /**
+     * Construtor para criar um objeto de tentativa (guess).
+     */
+    public Word(String guessInput) {
+        if (guessInput == null) guessInput = "";
+        this.guess = guessInput.toLowerCase().split("");
     }
-    
+
     public String printGuess() {
-    	return String.join(" ", this.guess).toLowerCase();
+        return String.join(" ", this.guess);
     }
-    
-    
-    public Word guessWord(Word guess) {
-    	if(this.getWord().equals(guess.getGuess())) {
-    		this.guess = Arrays.copyOf(guess.guess, 5);
-    	}
-    	
-		return guess;
-    }
-    
-    public String[] guessLetter(String letter) {
 
+    /**
+     * Tenta adivinhar uma letra. Retorna true se a letra existir na palavra.
+     */
+    public boolean guessLetter(String letter) {
+        boolean found = false;
+        if (letter == null || letter.isEmpty()) return false;
+        
+        String input = letter.toLowerCase();
         for (int i = 0; i < palavra.length; i++) {
-            if (palavra[i].equalsIgnoreCase(letter)) {
-                guess[i] = letter;
+            if (palavra[i].equalsIgnoreCase(input)) {
+                guess[i] = palavra[i].toLowerCase();
+                found = true;
             }
         }
-
-        return guess;
+        return found;
     }
-    
+
+    /**
+     * Compara se a palavra completa está correta.
+     */
+    public boolean guessWord(Word anotherWord) {
+        if (this.toString().equals(anotherWord.getGuessAsString())) {
+            this.guess = Arrays.copyOf(palavra, palavra.length);
+            return true;
+        }
+        return false;
+    }
+
     public boolean isGuessed() {
-        for (int i = 0; i < palavra.length; i++) {
-            if (!palavra[i].equalsIgnoreCase(guess[i])) {
-                return false; 
-            }
-        }
-        return true;
+        return Arrays.equals(palavra, guess);
     }
-    
-    public String getWord() {
-    	return Arrays.toString(palavra);
+
+    private String getGuessAsString() {
+        return String.join("", this.guess).toLowerCase();
     }
-    
-    public String getGuess() {
-    	return Arrays.toString(guess);
-    }
-    
-   
+
     @Override
     public String toString() {
-    	return String.join("", this.palavra).toLowerCase();
+        return String.join("", this.palavra).toLowerCase();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        
-    	if (obj == null || this.getClass() != obj.getClass()) 
-    		return false;
-    	        
-    	Word guess = (Word) obj;
-        for (int i = 0; i < this.palavra.length; i++) {
-            if (!(this.palavra[i].equals(guess.guess[i]))) {
-                return false;
-            }
-        }      
-        return true;
-        
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Word other = (Word) obj;
+        return Arrays.equals(this.palavra, other.palavra);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(palavra);
     }
 }
