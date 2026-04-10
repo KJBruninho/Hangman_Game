@@ -1,6 +1,8 @@
 package game;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import utils.Menus;
 import utils.Message;
@@ -16,6 +18,9 @@ public class Game {
     private final Message roomCreatorMsg;
     private final Word word = new Word();
     private final Message[] players;
+
+    // ArrayList de letras já tentadas
+    private final List<String> triedLetters = new ArrayList<>();
 
     public Game(Message[] players, Message roomCreatorMsg) {
         this.players = players;
@@ -47,7 +52,24 @@ public class Game {
         return true;
     }
 
+    // Método para imprimir letras tentadas
+    private String printTriedLetters() {
+
+        if (triedLetters.isEmpty()) {
+            return "Letras tentadas: nenhuma";
+        }
+
+        StringBuilder sb = new StringBuilder("Letras tentadas: ");
+
+        for (String letter : triedLetters) {
+            sb.append(letter).append(" ");
+        }
+
+        return sb.toString();
+    }
+
     public void play() {
+
         try {
 
             broadcast("\n=== O JOGO COMEÇOU ===");
@@ -67,9 +89,9 @@ public class Game {
                 Message current = players[playerIndex];
 
                 broadcast("\nTurno do jogador " + (playerIndex + 1));
-                broadcast("Palavra atual: " + word.printGuess());                
+                broadcast("Palavra atual: " + word.printGuess());
                 broadcast(Menus.printVida(lives[playerIndex]));
-
+                broadcast(printTriedLetters());
 
                 current.send("É a tua vez! Insere uma letra ou palavra:");
 
@@ -79,9 +101,20 @@ public class Game {
 
                 if (obj instanceof String) {
 
-                    String guess = (String) obj;
+                    String guess = ((String) obj).toLowerCase();
 
                     if (guess.length() == 1) {
+
+                        // Verificar se já foi tentada
+                        if (triedLetters.contains(guess)) {
+
+                            current.send("Essa letra já foi tentada.");
+                            continue;
+
+                        }
+
+                        // Guardar letra
+                        triedLetters.add(guess);
 
                         correct = word.guessLetter(guess);
 
@@ -97,25 +130,46 @@ public class Game {
 
                     broadcast(
                         "Jogador " + (playerIndex + 1) +
-                        " errou! Vidas restantes: " + 
-                        lives[playerIndex] + "\n" + Menus.printVida(lives[playerIndex])
+                        " errou! Vidas restantes: " +
+                        lives[playerIndex]
                     );
 
+                    broadcast(Menus.printVida(lives[playerIndex]));
+                    broadcast(printTriedLetters());
+
                     if (lives[playerIndex] == 0) {
+
                         broadcast(
                             "Jogador " + (playerIndex + 1) +
-                            " foi eliminado!\n"
+                            " foi eliminado!"
                         );
                     }
+
+                } else {
+
+                    broadcast(
+                        "Jogador " + (playerIndex + 1) +
+                        " acertou!"
+                    );
+
+                    broadcast(printTriedLetters());
                 }
 
                 turn++;
             }
 
-            broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
-   
+            broadcast(
+                Menus.printFimJogo(
+                    word.isGuessed(),
+                    word.toString()
+                )
+            );
+
         } catch (Exception e) {
-            System.out.println("Game error: " + e.getMessage());
+
+            System.out.println(
+                "Game error: " + e.getMessage()
+            );
         }
     }
 

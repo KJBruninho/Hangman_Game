@@ -1,5 +1,6 @@
 package game;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import utils.Message;
 
@@ -18,13 +19,29 @@ public class Room extends Thread {
         start();
     }
 
-    public void enterRoom(Message playerMsg) {
+    public void enterRoom(Message playerMsg) throws IOException {
         try {
             sem.acquire();
+
             synchronized (this) {
                 players[numPlayers++] = playerMsg;
-                if (numPlayers == capacity) notifyAll();
+
+               playerMsg.send(
+                    "Entrou na sala (" 
+                    + numPlayers + "/" + capacity + " jogadores)."
+                );
+
+                if (numPlayers < capacity) {
+                    playerMsg.send(
+                        "Aguarde que a sala fique cheia para iniciar o jogo."
+                    );
+                }
+
+                if (numPlayers == capacity) {
+                    notifyAll();
+                }
             }
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

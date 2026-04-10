@@ -38,6 +38,35 @@ public class Lobby extends Thread {
                     this.inGame = true; 
                 }
                 break;
+            case 3:
+                msg.send("Introduza a capacidade da sala:");
+                
+                Object capReceived = msg.receive();
+                if (capReceived == null) return;
+
+                int capacity;
+                try {
+                    capacity = Integer.parseInt((String) capReceived);
+
+                    if (capacity <= 0) {
+                        msg.send("Capacidade invalida. Deve ser maior que 0.");
+                        break;
+                    }
+
+                } catch (NumberFormatException e) {
+                    msg.send("Valor invalido.");
+                    break;
+                }
+
+                msg.send(Menus.printGameLogo());
+
+                Room newRoom = new Room(capacity, msg);
+                rooms.add(newRoom);
+
+                newRoom.enterRoom(this.msg);
+                this.inGame = true;
+
+                break;
             case 9:
                 s.close();
                 break;
