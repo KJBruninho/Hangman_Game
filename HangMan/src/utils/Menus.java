@@ -165,11 +165,40 @@ public final class Menus {
         sb.append("\n").append("=".repeat(49)).append("\n");
 
         if (ganhou) {
-            sb.append("  	  ★ PARABÉNS! VOCÊ SOBREVIVEU  ★\n");
+            sb.append("=================================================\n");
+            sb.append("          ★ PARABÉNS! VOCÊ SOBREVIVEU ★         \n");
+            sb.append("=================================================\n");
+            sb.append("          _____          __  __ ______           \n");
+            sb.append("         / ____|   /\\   |  \\/  |  ____|          \n");
+            sb.append("        | |  __   /  \\  | \\  / | |__             \n");
+            sb.append("        | | |_ | / /\\ \\ | |\\/| |  __|            \n");
+            sb.append("        | |__| |/ ____ \\| |  | | |____           \n");
+            sb.append("         \\_____/_/    \\_\\_|  |_|______|          \n");
+            sb.append("          ____      ________ _____               \n");
+            sb.append("         / __ \\    / /  ____|  __   \\            \n");
+            sb.append("        | |  | \\ \\  / /| |__  | |__) |           \n");
+            sb.append("        | |  | |\\ \\/ / |  __| |  _  /            \n");
+            sb.append("        | |__| | \\  /  | |____| | \\ \\            \n");
+            sb.append("         \\____/   \\/   |______|_|  \\_\\           \n");
+            sb.append("=================================================\n");
         } else {
-            sb.append("            	  GAME OVER!!!			\n");
+            sb.append("=================================================\n");
+            sb.append(" X Infelizmente a gravata estava muito apertada! X\n");
+            sb.append("=================================================\n");
+            sb.append("          _____          __  __ ______           \n");
+            sb.append("         / ____|   /\\   |  \\/  |  ____|          \n");
+            sb.append("        | |  __   /  \\  | \\  / | |__             \n");
+            sb.append("        | | |_ | / /\\ \\ | |\\/| |  __|            \n");
+            sb.append("        | |__| |/ ____ \\| |  | | |____           \n");
+            sb.append("         \\_____/_/    \\_\\_|  |_|______|          \n");
+            sb.append("          ____      ________ _____               \n");
+            sb.append("         / __ \\    / /  ____|  __   \\            \n");
+            sb.append("        | |  | \\ \\  / /| |__  | |__) |           \n");
+            sb.append("        | |  | |\\ \\/ / |  __| |  _  /            \n");
+            sb.append("        | |__| | \\  /  | |____| | \\ \\            \n");
+            sb.append("         \\____/   \\/   |______|_|  \\_\\           \n");
+            sb.append("=================================================\n");
         }
-
         sb.append("=".repeat(49)).append("\n");
         sb.append(" [1] Jogar Novamente\n");
         sb.append(" [0] Menu Inicial\n");

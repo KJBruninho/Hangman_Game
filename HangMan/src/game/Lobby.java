@@ -25,7 +25,7 @@ public class Lobby extends Thread {
                 Room room = new Room(1, msg);
                 rooms.add(room);
                 room.enterRoom(this.msg);
-                this.inGame = true; // Para o loop do Lobby
+                this.inGame = true; 
                 break;
             case 2:
                 msg.send(listRooms());
@@ -35,7 +35,7 @@ public class Lobby extends Thread {
                 int id = Integer.parseInt((String) received);
                 if (id >= 0 && id < rooms.size()) {
                     rooms.get(id).enterRoom(this.msg);
-                    this.inGame = true; // Para o loop do Lobby
+                    this.inGame = true; 
                 }
                 break;
             case 9:

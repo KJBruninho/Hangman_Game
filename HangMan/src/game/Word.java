@@ -27,7 +27,7 @@ public class Word {
             this.palavra = escolhida.split("");
         } catch (IOException e) {
             System.err.println("Erro ao carregar palavras: " + e.getMessage());
-            this.palavra = new String[]{"j", "a", "v", "a"}; // Fallback
+            this.palavra = new String[]{"j", "a", "v", "a","c"}; // Fallback
         }
         
         this.guess = new String[palavra.length];
@@ -73,6 +73,7 @@ public class Word {
         }
         return false;
     }
+    
 
     public boolean isGuessed() {
         return Arrays.equals(palavra, guess);
