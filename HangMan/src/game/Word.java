@@ -8,15 +8,12 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Word {
-
+ 
     private String[] palavra;
     private String[] guess;
     private static final String FILE_PATH = "palavras.txt";
     private static final Random RANDOM = new Random();
 
-    /**
-     * Construtor que lê uma palavra aleatória do ficheiro.
-     */
     public Word() {
         try {
             List<String> linhas = Files.readAllLines(Paths.get(FILE_PATH));
@@ -34,9 +31,6 @@ public class Word {
         Arrays.fill(this.guess, "_");
     }
 
-    /**
-     * Construtor para criar um objeto de tentativa (guess).
-     */
     public Word(String guessInput) {
         if (guessInput == null) guessInput = "";
         this.guess = guessInput.toLowerCase().split("");
@@ -46,9 +40,6 @@ public class Word {
         return String.join(" ", this.guess);
     }
 
-    /**
-     * Tenta adivinhar uma letra. Retorna true se a letra existir na palavra.
-     */
     public boolean guessLetter(String letter) {
         boolean found = false;
         if (letter == null || letter.isEmpty()) return false;
@@ -63,11 +54,8 @@ public class Word {
         return found;
     }
 
-    /**
-     * Compara se a palavra completa está correta.
-     */
     public boolean guessWord(Word anotherWord) {
-        if (this.toString().equals(anotherWord.getGuessAsString())) {
+        if (this.toString().equals(anotherWord.toString())) {
             this.guess = Arrays.copyOf(palavra, palavra.length);
             return true;
         }
@@ -77,10 +65,6 @@ public class Word {
 
     public boolean isGuessed() {
         return Arrays.equals(palavra, guess);
-    }
-
-    private String getGuessAsString() {
-        return String.join("", this.guess).toLowerCase();
     }
 
     @Override
@@ -96,8 +80,5 @@ public class Word {
         return Arrays.equals(this.palavra, other.palavra);
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(palavra);
-    }
+
 }

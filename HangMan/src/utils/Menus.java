@@ -1,6 +1,6 @@
 package utils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public final class Menus {
 	
@@ -128,20 +128,22 @@ public final class Menus {
         """
     };
 
-    public static String printLetrasTentadas(ArrayList<String> letras) {
+    public static String printLetrasTentadas(List<String> triedLetters) {
         StringBuilder barra = new StringBuilder();
 
-        if (letras.isEmpty()) {
+        if (triedLetters.isEmpty()) {
             barra.append("-");
         } else {
-            for (String letra : letras) {
-                barra.append(" [")
-                     .append(letra.toUpperCase())
-                     .append("] ");
-            }
+            triedLetters.stream()
+                .distinct()
+                .forEach(letra -> {
+                    barra.append(" [")
+                         .append(letra.toUpperCase())
+                         .append("] ");
+                });
         }
 
-        return " LETRAS TENTADAS: " + barra.toString();
+        return "LETRAS TENTADAS: " + barra.toString();
     }
 
     public static String printVida(int vidasRestantes) {
@@ -155,7 +157,7 @@ public final class Menus {
             }
         }
 
-        return STAGES[maxVidas-vidasRestantes] + "\n VIDAS: " + barra.toString();
+        return "VIDAS: " + barra.toString() + "\n"+ STAGES[maxVidas-vidasRestantes];
     }
 
     public static String printFimJogo(boolean ganhou, String palavraCorreta) {
@@ -200,8 +202,8 @@ public final class Menus {
             sb.append("=================================================\n");
         }
         sb.append("=".repeat(49)).append("\n");
-        sb.append(" [1] Jogar Novamente\n");
-        sb.append(" [0] Menu Inicial\n");
+        sb.append(" [1] Menu Inicial\n");
+        sb.append(" [9] Sair		\n");
         sb.append("_".repeat(49));
 
         return sb.toString();

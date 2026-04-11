@@ -35,10 +35,12 @@ public class Game {
 
     private void broadcast(String text) {
         for (Message p : players) {
-            try {
-                p.send(text);
-            } catch (IOException e) {
-                System.out.println("Erro no broadcast: " + e.getMessage());
+            if (p != null) { 
+                try {
+                    p.send(text);
+                } catch (IOException e) {
+                    System.out.println("Erro no broadcast: " + e.getMessage());
+                }
             }
         }
     }
@@ -52,28 +54,11 @@ public class Game {
         return true;
     }
 
-    // Método para imprimir letras tentadas
-    private String printTriedLetters() {
-
-        if (triedLetters.isEmpty()) {
-            return "Letras tentadas: nenhuma";
-        }
-
-        StringBuilder sb = new StringBuilder("Letras tentadas: ");
-
-        for (String letter : triedLetters) {
-            sb.append(letter).append(" ");
-        }
-
-        return sb.toString();
-    }
-
     public void play() {
 
         try {
-
-            broadcast("\n=== O JOGO COMEÇOU ===");
-            broadcast("A palavra tem " + word.toString().length() + " letras.");
+        	broadcast("==================================================");
+            broadcast("================  O JOGO COMEÇOU!  ===============");
 
             System.out.println(word);
 
@@ -81,89 +66,85 @@ public class Game {
 
                 int playerIndex = turn % players.length;
 
-                if (lives[playerIndex] <= 0) {
+                if (lives[playerIndex] <= 0 || players[playerIndex] == null) {
                     turn++;
                     continue;
                 }
 
-                Message current = players[playerIndex];
+                Message current_Player = players[playerIndex];
+                
+                broadcast("==================================================");
+                broadcast("				Turno do jogador " + (playerIndex + 1) + "\n");
+                current_Player.send(Menus.printVida(lives[playerIndex]));
+                broadcast("Palavra:  | " + word.printGuess() + " |");
+                current_Player.send(Menus.printLetrasTentadas(triedLetters));
+                current_Player.send("\n"
+                		   + " >É a tua vez!\n"
+                		   + " >Insere uma letra ou palavra: ");
 
-                broadcast("\nTurno do jogador " + (playerIndex + 1));
-                broadcast("Palavra atual: " + word.printGuess());
-                broadcast(Menus.printVida(lives[playerIndex]));
-                broadcast(printTriedLetters());
+                boolean correctL = false;
+                boolean correctW = false;
+                
+                Object obj = current_Player.receive();
+                String guess = ((String) obj).toLowerCase();
 
-                current.send("É a tua vez! Insere uma letra ou palavra:");
+                if (guess.length() == 1) {
 
-                Object obj = current.receive();
+                    if (triedLetters.contains(guess.toUpperCase())) {
 
-                boolean correct = false;
+                        current_Player.send("Essa letra já foi tentada.");
+                        turn++;
+                        continue;
 
-                if (obj instanceof String) {
+                    }
 
-                    String guess = ((String) obj).toLowerCase();
+                    triedLetters.add(guess.toUpperCase());
 
-                    if (guess.length() == 1) {
+                    correctL = word.guessLetter(guess);
+                    
+                    if (!correctL) {
+                        lives[playerIndex]--;
 
-                        // Verificar se já foi tentada
-                        if (triedLetters.contains(guess)) {
-
-                            current.send("Essa letra já foi tentada.");
-                            continue;
-
+                        broadcast(" >Jogador " + (playerIndex + 1) + " errou! \n"
+                        		+ " >Vidas restantes: " + lives[playerIndex] 
+                        		+ "\n");
+                        
+                        if (lives[playerIndex] == 0) {
+                            broadcast("	>Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
                         }
-
-                        // Guardar letra
-                        triedLetters.add(guess);
-
-                        correct = word.guessLetter(guess);
-
+                        
                     } else {
-
-                        correct = word.guessWord(new Word(guess));
-                    }
-                }
-
-                if (!correct) {
-
-                    lives[playerIndex]--;
-
-                    broadcast(
-                        "Jogador " + (playerIndex + 1) +
-                        " errou! Vidas restantes: " +
-                        lives[playerIndex]
-                    );
-
-                    broadcast(Menus.printVida(lives[playerIndex]));
-                    broadcast(printTriedLetters());
-
-                    if (lives[playerIndex] == 0) {
-
-                        broadcast(
-                            "Jogador " + (playerIndex + 1) +
-                            " foi eliminado!"
-                        );
+                    	
+                        broadcast(" >Jogador " + (playerIndex + 1) + " acertou!");
                     }
 
-                } else {
+                } else {                    	
+                    correctW = word.guessWord(new Word(guess));
+                    
+                    if (!correctW) {
+                        lives[playerIndex]--;
+                        lives[playerIndex]--;
 
-                    broadcast(
-                        "Jogador " + (playerIndex + 1) +
-                        " acertou!"
-                    );
-
-                    broadcast(printTriedLetters());
+                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
+                        		+ " >Vidas restantes: " + lives[playerIndex] 
+                        		+ "\n");
+                        
+                        if (lives[playerIndex] == 0) {
+                            broadcast("	>Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
+                        }
+                        
+                    } else {
+                    	
+                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
+                        		+ " >Muitos parabéns!\n");
+                    }
                 }
+            
 
-                turn++;
+                turn++; 
             }
 
-            broadcast(
-                Menus.printFimJogo(
-                    word.isGuessed(),
-                    word.toString()
-                )
-            );
+            broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
 
         } catch (Exception e) {
 

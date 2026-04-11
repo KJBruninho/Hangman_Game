@@ -44,7 +44,7 @@ public class Lobby extends Thread {
                 Object capReceived = msg.receive();
                 if (capReceived == null) return;
 
-                int capacity;
+                int capacity; 
                 try {
                     capacity = Integer.parseInt((String) capReceived);
 
@@ -70,6 +70,8 @@ public class Lobby extends Thread {
             case 9:
                 s.close();
                 break;
+            default:
+            	return;
         }
     }
 
