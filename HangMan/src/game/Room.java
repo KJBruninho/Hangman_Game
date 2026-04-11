@@ -6,7 +6,6 @@ import utils.Message;
 
 public class Room extends Thread {
     private final Message[] players;
-    private final Message msg;
     private int numPlayers = 0;
     private final int capacity;
     private final Semaphore sem;
@@ -16,7 +15,6 @@ public class Room extends Thread {
 
     public Room(int size, Message msg) {
         this.capacity = size;
-        this.msg = msg;
         this.players = new Message[size];
         this.sem = new Semaphore(size);
         this.startTime = System.currentTimeMillis();
@@ -73,7 +71,7 @@ public class Room extends Thread {
         }
         
         broadcast("O jogo vai começar!\n");
-        new Game(players, msg).play();
+        new Game(players).play();
     }
 
     private void broadcast(String message) {

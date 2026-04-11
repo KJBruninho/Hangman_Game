@@ -24,7 +24,7 @@ public final class Menus {
         );
         sb.append("\n").append("=".repeat(49)).append(	"\n");
         sb.append(" [1] Jogo individual. 		 		 \n");
-        sb.append(" [2] Juntar-me a um jogo.			 \n");
+        sb.append(" [2] Juntar-me a um jogo.			 \n"); 
         sb.append(" [3] Criar um jogo. (max 4 jogadores) \n");
         sb.append(" [9] Sair.							 \n");
         sb.append("_".repeat(49));

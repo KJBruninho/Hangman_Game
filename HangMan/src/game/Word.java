@@ -27,13 +27,8 @@ public class Word {
             this.palavra = new String[]{"j", "a", "v", "a","c"}; // Fallback
         }
         
-        this.guess = new String[palavra.length];
+        this.guess = new String[palavra.length]; 
         Arrays.fill(this.guess, "_");
-    }
-
-    public Word(String guessInput) {
-        if (guessInput == null) guessInput = "";
-        this.guess = guessInput.toLowerCase().split("");
     }
 
     public String printGuess() {
@@ -54,14 +49,11 @@ public class Word {
         return found;
     }
 
-    public boolean guessWord(Word anotherWord) {
-        if (this.toString().equals(anotherWord.toString())) {
-            this.guess = Arrays.copyOf(palavra, palavra.length);
-            return true;
-        }
-        return false;
+    public boolean guessWord(String word) {
+    	if(word!=null)
+    		guess = word.toLowerCase().split("");
+        return word != null && word.equalsIgnoreCase(this.toString());
     }
-    
 
     public boolean isGuessed() {
         return Arrays.equals(palavra, guess);

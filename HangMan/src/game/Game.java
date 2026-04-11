@@ -15,16 +15,14 @@ public class Game {
 
     private final int[] lives;
 
-    private final Message roomCreatorMsg;
     private final Word word = new Word();
     private final Message[] players;
 
     // ArrayList de letras já tentadas
     private final List<String> triedLetters = new ArrayList<>();
 
-    public Game(Message[] players, Message roomCreatorMsg) {
+    public Game(Message[] players) {
         this.players = players;
-        this.roomCreatorMsg = roomCreatorMsg;
 
         lives = new int[players.length];
 
@@ -119,7 +117,7 @@ public class Game {
                     }
 
                 } else {                    	
-                    correctW = word.guessWord(new Word(guess));
+                    correctW = word.guessWord(guess);
                     
                     if (!correctW) {
                         lives[playerIndex]--;
@@ -137,6 +135,7 @@ public class Game {
                     	
                         broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
                         		+ " >Muitos parabéns!\n");
+                        
                     }
                 }
             
@@ -147,14 +146,8 @@ public class Game {
             broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
 
         } catch (Exception e) {
-
-            System.out.println(
-                "Game error: " + e.getMessage()
-            );
+            System.out.println("Game error: " + e.getMessage());
         }
     }
 
-    public Message getRoomCreatorMsg() {
-        return roomCreatorMsg;
-    }
 }

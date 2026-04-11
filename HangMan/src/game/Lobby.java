@@ -26,16 +26,18 @@ public class Lobby extends Thread {
                 rooms.add(room);
                 room.enterRoom(this.msg);
                 this.inGame = true; 
-                break;
+                return;
             case 2:
                 msg.send(listRooms());
-                msg.send("Introduza o numero da sala:");
+                msg.send(" >Introduza o numero:");
                 Object received = msg.receive();
                 if (received == null) return;
                 int id = Integer.parseInt((String) received);
                 if (id >= 0 && id < rooms.size()) {
                     rooms.get(id).enterRoom(this.msg);
                     this.inGame = true; 
+                }else {
+                	return;
                 }
                 break;
             case 3:
@@ -72,11 +74,11 @@ public class Lobby extends Thread {
                 break;
             default:
             	return;
-        }
+        } 
     }
 
     private String listRooms() {
-        if (rooms.isEmpty()) return "Nao existem salas disponiveis.\n";
+        if (rooms.isEmpty()) return " Nao existem salas disponiveis.\n Introduza qualquer tipo numero para voltar ao menu anterior.\n";
         StringBuilder res = new StringBuilder("\nSalas:\n");
         for (int i = 0; i < rooms.size(); i++) {
             res.append("Sala ").append(i).append(" | ").append(rooms.get(i).getNumPlayers()).append("/").append(rooms.get(i).getCapacity()).append("\n");
