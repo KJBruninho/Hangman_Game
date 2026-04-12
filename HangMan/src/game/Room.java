@@ -12,10 +12,12 @@ public class Room extends Thread {
     private final int capacity;
     private final Semaphore sem;
     private final int difficulty;
+    private boolean inGame;
     
     private long startTime;
     private final long maxWaitTime = 60000;
 
+//Constructors    
     public Room(int size,int difficulty) {
     	if(size>MAX_CAPACITY || size<1) {
     		this.capacity = MAX_CAPACITY;  
@@ -26,9 +28,11 @@ public class Room extends Thread {
         this.players = new Message[size];
         this.sem = new Semaphore(size);
         this.startTime = System.currentTimeMillis();
+        this.inGame = false;
         start();
     }
 
+//Methods
     public void enterRoom(Message playerMsg) throws IOException {
         try {
             if (!sem.tryAcquire()) {
@@ -39,7 +43,7 @@ public class Room extends Thread {
             synchronized (this) { 
             	players[numPlayers++] = playerMsg;
 
-                playerMsg.send(" Entrou na sala (" + numPlayers + "/" + capacity + " jogadores).");
+                broadcast("Player"+ numPlayers + "  na sala (" + numPlayers + "/" + capacity + " jogadores).");
                
                 if (numPlayers < capacity) {
                     playerMsg.send(" Aguarde o preenchimento da sala ou o fim do tempo de espera.\n");
@@ -69,9 +73,39 @@ public class Room extends Thread {
         }
     }
 
-    public int getNumPlayers() { return numPlayers; }
-    public int getCapacity() { return capacity; }
+    public String getPrintDifficulty() {
+    	switch (this.getDifficulty()) {
+    	case 1:
+    		return "Dificuldade: Facil";
+    	case 2:
+    		return "Dificuldade: Media";
+    	case 3:
+    		return "Dificuldade: Dificil";
+    	default:
+    		return "Dificuldade: Aleatorio";
+    				
+    	}
+    }
     
+//Getters and Setters    
+    public int getDifficulty() { 
+    	return difficulty; 
+    }
+    
+    public int getNumPlayers() { 
+    	return numPlayers; 
+    }
+    
+    public int getCapacity() { 
+    	return capacity; 
+    }
+    
+    public boolean getinGame() {
+    	return inGame;
+    }
+    
+    
+//Overrided Methods    
     @Override
     public void run() {
     	synchronized (this) {
@@ -102,6 +136,7 @@ public class Room extends Thread {
     		}
     	}
     	
+    	inGame = true;
 
     	broadcast("O jogo vai começar!\n");
     	switch(difficulty) {
@@ -110,9 +145,11 @@ public class Room extends Thread {
     			break;
     		case 2:
     			new Game(players,difficulty).playInd();
+    			this.exitRoom(players[0]);
     			break;
     		case 3:
     			new Game(players,difficulty).playPart();
+    			this.exitRoom(players[0]);
     			break;
     		case 4:
     			new Game(players,difficulty).playPart();

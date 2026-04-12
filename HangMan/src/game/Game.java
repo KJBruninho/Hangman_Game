@@ -121,23 +121,28 @@ public class Game {
                 } else {                    	
                     correctW = word.guessWord(guess);
                     
-                    if (!correctW) {
-                        lives[playerIndex]--;
-                        lives[playerIndex]--;
-
-                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
-                        		+ " >Vidas restantes: " + lives[playerIndex] 
-                        		+ "\n");
-                        
-                        if (lives[playerIndex] == 0) {
-                            broadcast("	>Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
-                        }
-                        
-                    } else {
-                    	
-                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
-                        		+ " >Muitos parabéns!\n");
-                        
+                    synchronized(this) {
+	                    if (!correctW) {
+	                    	if(lives[playerIndex]>2)
+	                    		lives[playerIndex]-= 2;
+	                    	else {
+	                    		lives[playerIndex]--;
+	                    	}
+	                    	
+	                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
+	                        		+ " >Vidas restantes: " + lives[playerIndex] 
+	                        		+ "\n");
+	                        
+	                        if (lives[playerIndex] == 0) {
+	                            broadcast("	>Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
+	                        }
+	                        
+	                    } else {
+	                    	
+	                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
+	                        		+ " >Muitos parabéns!\n");
+	                        
+	                    }
                     }
                 }
             
@@ -212,20 +217,24 @@ public class Game {
 
                 } else {                    	
                     correctW = word.guessWord(guess);
-                    
-                    if (!correctW) {
-                    	livesPart--;
-                    	livesPart--;
-
-                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
-                        		+ " >Vidas restantes: " + livesPart
-                        		+ "\n");
-                        
-                    } else {
-                    	
-                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
-                        		+ " >Muitos parabéns!\n");
-                        
+                    synchronized(this) {
+	                    if (!correctW) {
+	                    	if(livesPart>2)
+	                    		livesPart -= 2;
+	                    	else {
+	                    		livesPart--;
+	                    	}
+	
+	                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
+	                        		+ " >Vidas restantes: " + livesPart
+	                        		+ "\n");
+	                        
+	                    } else {
+	                    	
+	                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
+	                        		+ " >Muitos parabéns!\n");
+	                        
+	                    }
                     }
                 }
             

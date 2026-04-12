@@ -33,6 +33,32 @@ public final class Menus {
         return sb.toString();
     }
 		
+	public static String printDificuldade() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n").append("=".repeat(49)).append("\n");
+        sb.append(" Escolha a Dificuldade: \n"
+    			+ " [1]Facil.	(palavras de 3 a 4 letras)\n"
+    			+ " [2]Media.	(palavras de 5 a 7 letras)\n"
+    			+ " [3]Dificil.	(palavras de 7 ou mais letras)\n"
+    			+ " [4]Aleatorio."
+        ); 
+        sb.append("\n").append("=".repeat(49)).append(		   "\n");
+        return sb.toString();
+    }
+	public static String printTipoSala() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n").append("=".repeat(49)).append("\n");
+        sb.append(" Quem tipo de sala quer criar?\n"
+    			+" [0] Com vidas individuais entre Jogadores.\n"
+    			+" [1] Com vida partilhada entre Jogadores.\n "
+        ); 
+        sb.append("\n").append("=".repeat(49)).append(		   "\n");
+        return sb.toString();
+    }
+	
+	
 	
     public static String printGameLogo() {
         StringBuilder sb = new StringBuilder();

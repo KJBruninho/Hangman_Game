@@ -30,7 +30,7 @@ public class Lobby extends Thread {
                 break;
             case 2:
                 msg.send(listRoomsInd());
-                msg.send(" >Introduza o numero (ou pressione Enter para voltar:");
+                msg.send(" >Introduza o numero (ou pressione Enter para voltar):");
                 Object received2 = msg.receive();
                 if (received2 == null) return;
                 try {
@@ -38,6 +38,8 @@ public class Lobby extends Thread {
                 	if (id >= 0 && id < roomsInd.size()) {
                 		roomsInd.get(id).enterRoom(this.msg);
                 		roomsInd.get(id).join();
+                		if(roomsInd.get(id).getinGame())
+                			processarPosJogo();
                 	}
                 }catch(Exception e){
                 	return;
@@ -53,6 +55,8 @@ public class Lobby extends Thread {
                 	if (id >= 0 && id < roomsPart.size()) {
                 		roomsPart.get(id).enterRoom(this.msg);
                 		roomsPart.get(id).join();
+                		if(roomsPart.get(id).getinGame())
+                			processarPosJogo();
                 	}
                 }catch(Exception e){
                 	return;
@@ -72,17 +76,11 @@ public class Lobby extends Thread {
             		break;
             	}
             	
-            	msg.send(" Escolha a Dificuldade: \n"
-            			+ " [1]Facil.	(palavras de 3 a 4 letras)\n"
-            			+ " [2]Media.	(palavras de 5 a 7 letras)\n"
-            			+ " [3]Dificil.	(palavras de 7 ou mais letras)\n"
-            			+ " [4]Aleatorio.");
+            	msg.send(Menus.printDificuldade());
             	
             	int option1 = Integer.parseInt((String) msg.receive());
             	
-            	msg.send(" Quem tipo de sala quer criar?\n"
-            			+" [0] Com vidas individuais entre Jogadores.\n"
-            			+" [1] Com vida partilhada entre Jogadores.\n ");
+            	msg.send(Menus.printTipoSala());
             	
             	int option2 = Integer.parseInt((String) msg.receive());
             	
@@ -96,7 +94,7 @@ public class Lobby extends Thread {
             		roomsPart.add(newRoom);
             	newRoom.enterRoom(this.msg);
             	newRoom.join();
-            	
+            	processarPosJogo();
             	break;
             case 9:
                 msg.getSocket().close();
@@ -107,44 +105,52 @@ public class Lobby extends Thread {
     }
 
     private Object listRoomsPart() {
-    	for(Room room : rooms) {
+    	for(Room room : roomsPart) {
     		if(room.getNumPlayers()==0)
-    			rooms.remove(room);
+    			roomsPart.remove(room);
     	}
-        if (rooms.isEmpty()) 
+        if (roomsPart.isEmpty()) 
         	return " Nao existem salas disponiveis.\n"
         		 + " Precione Enter tecla para voltar.\n";
         
         StringBuilder res = new StringBuilder("\nSalas:\n");
         
-        for (int i = 0; i < rooms.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(rooms.get(i).getNumPlayers()).append("/").append(rooms.get(i).getCapacity()).append("\n");
+        for (int i = 0; i < roomsPart.size(); i++) {
+            res.append("Sala ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
 	}
 
 	private String listRoomsInd() {
-    	for(Room room : rooms) {
+    	for(Room room : roomsInd) {
     		if(room.getNumPlayers()==0)
-    			rooms.remove(room);
+    			roomsInd.remove(room);
     	}
-        if (rooms.isEmpty()) 
+        if (roomsInd.isEmpty()) 
         	return " Nao existem salas disponiveis.\n"
         		 + " Precione Enter tecla para voltar.\n";
         
         StringBuilder res = new StringBuilder("\nSalas:\n");
         
-        for (int i = 0; i < rooms.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(rooms.get(i).getNumPlayers()).append("/").append(rooms.get(i).getCapacity()).append("\n");
+        for (int i = 0; i < roomsInd.size(); i++) {
+            res.append("Sala ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
     }
 
-    private void processarPosJogo() throws Exception {
+    private synchronized void processarPosJogo() throws Exception {
         Object res = msg.receive(); 
         if (res != null && res.toString().equals("9")) {
-            msg.getSocket().close();
+        	msg.getSocket().close();
         }
+    	for(Room room : roomsPart) {
+    		if(roomsPart.contains(room));
+    			roomsPart.remove(room);
+    	}
+    	for (Room room : roomsInd) {
+    		if(roomsInd.contains(room));
+    			roomsInd.remove(room);
+    	}
     }
         
     @Override
