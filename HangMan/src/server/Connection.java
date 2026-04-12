@@ -16,7 +16,7 @@ public class Connection extends Thread {
 		super();
 		start();
 	}
-	
+	 
 	public Connection(Socket s){
 		super();
 		this.s = s;
@@ -37,8 +37,8 @@ public class Connection extends Thread {
     		Message msg = new Message(s);
     		msg.send("	Novo jogador! Seja bem-vindo.");
     		msg.send("	O jogo comecara em breve.");
-    		msg.send("	A entrar num Lobby...");
-    		setLobby(new Lobby(s,msg));
+    		msg.send("	A entrar num Lobby..."); 
+    		setLobby(new Lobby(msg));
     		
 		} catch (IOException e) {
 			e.printStackTrace();

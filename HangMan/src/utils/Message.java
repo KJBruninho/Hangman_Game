@@ -17,9 +17,9 @@ public class Message {
         this.out.flush(); 
         this.in = new ObjectInputStream(s.getInputStream());
     }
-
+ 
     public void send(Object obj) throws IOException {
-        out.writeObject(obj);
+        out.writeObject(obj); 
         out.flush();
     }
 

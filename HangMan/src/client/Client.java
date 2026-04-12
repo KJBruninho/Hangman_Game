@@ -19,7 +19,7 @@ public class Client {
     	s = new Socket("127.0.0.1", 5432);
     	msg = new Message(s);
     	
-        new Client_Read(s,msg);
+        new Client_Read(s,msg); 
         new Client_Write(s,msg);
     }
 

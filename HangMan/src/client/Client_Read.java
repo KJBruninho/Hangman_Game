@@ -16,7 +16,7 @@ public class Client_Read extends Thread {
     @Override
     public void run() {
         try {
-            while (!s.isClosed()) {
+            while (!s.isClosed()) { 
                 Object received = msg.receive();
                 if (received != null) {
                     System.out.println(received.toString());

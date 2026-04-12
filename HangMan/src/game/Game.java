@@ -13,15 +13,13 @@ public class Game {
 
     private static final int MAX_LIVES = 7;
 
-    private final int[] lives;
+    private final int[] 		lives;
+    private int 				livesPart;
+    private final Word 			word;
+    private final Message[] 	players;
+    private final List<String> triedLetters;
 
-    private final Word word = new Word();
-    private final Message[] players;
-
-    // ArrayList de letras já tentadas
-    private final List<String> triedLetters = new ArrayList<>();
-
-    public Game(Message[] players) {
+    public Game(Message[] players , int difficulty) {
         this.players = players;
 
         lives = new int[players.length];
@@ -29,6 +27,10 @@ public class Game {
         for (int i = 0; i < players.length; i++) {
             lives[i] = MAX_LIVES;
         }
+        
+        livesPart = MAX_LIVES;
+        word = new Word(difficulty);
+        triedLetters = new ArrayList<>();
     }
 
     private void broadcast(String text) {
@@ -52,7 +54,7 @@ public class Game {
         return true;
     }
 
-    public void play() {
+    public void playInd() {
 
         try {
         	broadcast("==================================================");
@@ -149,5 +151,95 @@ public class Game {
             System.out.println("Game error: " + e.getMessage());
         }
     }
+    
+    public void playPart() {
+
+        try {
+        	broadcast("==================================================");
+            broadcast("================  O JOGO COMEÇOU!  ===============");
+
+            System.out.println(word);
+
+            while (!word.isGuessed() && livesPart != 0) {
+
+                int playerIndex = turn % players.length;
+
+                if (players[playerIndex] == null) {
+                    turn++;
+                    continue;
+                }
+
+                Message current_Player = players[playerIndex];
+                
+                broadcast("==================================================");
+                broadcast("				Turno do jogador " + (playerIndex + 1) + "\n");
+                current_Player.send(Menus.printVida(livesPart));
+                broadcast("Palavra:  | " + word.printGuess() + " |");
+                current_Player.send(Menus.printLetrasTentadas(triedLetters));
+                current_Player.send("\n"
+                		   + " >É a tua vez!\n"
+                		   + " >Insere uma letra ou palavra: ");
+
+                boolean correctL = false;
+                boolean correctW = false;
+                
+                Object obj = current_Player.receive();
+                String guess = ((String) obj).toLowerCase();
+
+                if (guess.length() == 1) {
+
+                    if (triedLetters.contains(guess.toUpperCase())) {
+
+                        current_Player.send("Essa letra já foi tentada.");
+                        turn++;
+                        continue;
+
+                    }
+
+                    triedLetters.add(guess.toUpperCase());
+
+                    correctL = word.guessLetter(guess);
+                    
+                    if (!correctL) {
+                    	livesPart--;
+                        broadcast(" >Jogador " + (playerIndex + 1) + " errou! \n"
+                        		+ " >Vidas restantes: " + livesPart
+                        		+ "\n");
+                        
+                    } else {                    	
+                        broadcast(" >Jogador " + (playerIndex + 1) + " acertou!");
+                    }
+
+                } else {                    	
+                    correctW = word.guessWord(guess);
+                    
+                    if (!correctW) {
+                    	livesPart--;
+                    	livesPart--;
+
+                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
+                        		+ " >Vidas restantes: " + livesPart
+                        		+ "\n");
+                        
+                    } else {
+                    	
+                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
+                        		+ " >Muitos parabéns!\n");
+                        
+                    }
+                }
+            
+
+                turn++; 
+            }
+
+            broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
+
+        } catch (Exception e) {
+            System.out.println("Game error: " + e.getMessage());
+        }
+    }
+    
+    
 
 }

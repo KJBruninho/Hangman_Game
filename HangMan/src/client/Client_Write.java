@@ -13,7 +13,7 @@ public class Client_Write extends Thread {
     public Client_Write(Socket s,Message msg) throws IOException {
         this.s = s;
         this.msg = msg;
-        start();
+        start(); 
     }
 
     @Override

@@ -11,7 +11,7 @@ public class Server {
 	
 	public Server() {
 		try {
-			ss = new ServerSocket(5432);
+			ss = new ServerSocket(5432); 
 			while(true) {
 				s  = ss.accept();
 				c  = new Connection(s);	
@@ -21,8 +21,8 @@ public class Server {
 			}
 				
 		} catch(IOException e) {
-			System.out.println(e);
-		}
+			System.out.println("Server: " + e.getMessage());
+		} 
 	}
 	
 }

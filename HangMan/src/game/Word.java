@@ -11,23 +11,45 @@ public class Word {
  
     private String[] palavra;
     private String[] guess;
-    private static final String FILE_PATH = "palavras.txt";
+    private static final String[] FILE_PATH = {"palavrasF.txt","palavrasM.txt","palavrasD.txt"};
     private static final Random RANDOM = new Random();
 
-    public Word() {
+    public Word(int difficulty) {
+        List<String> linhas = null;
         try {
-            List<String> linhas = Files.readAllLines(Paths.get(FILE_PATH));
-            if (linhas.isEmpty()) {
-                throw new IOException("O ficheiro de palavras está vazio.");
+            switch (difficulty) {
+                case 1:
+                    linhas = Files.readAllLines(Paths.get(FILE_PATH[0]));
+                    break;
+                case 2:
+                    linhas = Files.readAllLines(Paths.get(FILE_PATH[1]));
+                    break;
+                case 3:
+                    linhas = Files.readAllLines(Paths.get(FILE_PATH[2]));
+                    break;
+                case 4:
+                    // RANDOM.nextInt(3) gera 0, 1 ou 2
+                    linhas = Files.readAllLines(Paths.get(FILE_PATH[RANDOM.nextInt(3)]));
+                    break;
+                default:
+                    linhas = Files.readAllLines(Paths.get(FILE_PATH[0]));
+                    break;
             }
+
+            if (linhas == null || linhas.isEmpty()) {
+                throw new IOException("O ficheiro de palavras está vazio ou não foi carregado.");
+            }
+
             String escolhida = linhas.get(RANDOM.nextInt(linhas.size())).trim();
             this.palavra = escolhida.split("");
+
         } catch (IOException e) {
             System.err.println("Erro ao carregar palavras: " + e.getMessage());
-            this.palavra = new String[]{"j", "a", "v", "a","c"}; // Fallback
+            // Fallback caso o ficheiro falhe
+            this.palavra = new String[]{"j", "a", "v", "a"};
         }
-        
-        this.guess = new String[palavra.length]; 
+
+        this.guess = new String[palavra.length];
         Arrays.fill(this.guess, "_");
     }
 

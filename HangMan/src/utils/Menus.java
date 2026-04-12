@@ -21,12 +21,13 @@ public final class Menus {
         	    	    "	|_|\\___/|_.__/|_.__/ \\__, | 	\n" +
         	    	    " 	                     __/  | 	\n" +
         	    	    "	                     |___/  	\n"
-        );
-        sb.append("\n").append("=".repeat(49)).append(	"\n");
-        sb.append(" [1] Jogo individual. 		 		 \n");
-        sb.append(" [2] Juntar-me a um jogo.			 \n"); 
-        sb.append(" [3] Criar um jogo. (max 4 jogadores) \n");
-        sb.append(" [9] Sair.							 \n");
+        ); 
+        sb.append("\n").append("=".repeat(49)).append(		   "\n");
+        sb.append(" [1] Jogo individual. 		 		 		\n");
+        sb.append(" [2] Juntar-me a um jogo com vida individual.\n"); 
+        sb.append(" [3] Juntar-me a um jogo com vida partilhada.\n");
+        sb.append(" [4] Criar um jogo. (max 4 jogadores) 		\n");
+        sb.append(" [9] Sair.							 		\n");
         sb.append("_".repeat(49));
 
         return sb.toString();
@@ -48,7 +49,6 @@ public final class Menus {
                 "                   |___/\n"
         );
         sb.append("\n").append("=".repeat(49)).append("\n");
-
 
         return sb.toString();
     }
