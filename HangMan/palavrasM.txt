@@ -7,6 +7,7 @@ baixa
 balao
 banco
 barco
+negro
 beijo
 bicho
 bloco

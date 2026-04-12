@@ -28,7 +28,6 @@ public class Word {
                     linhas = Files.readAllLines(Paths.get(FILE_PATH[2]));
                     break;
                 case 4:
-                    // RANDOM.nextInt(3) gera 0, 1 ou 2
                     linhas = Files.readAllLines(Paths.get(FILE_PATH[RANDOM.nextInt(3)]));
                     break;
                 default:
@@ -72,9 +71,15 @@ public class Word {
     }
 
     public boolean guessWord(String word) {
-    	if(word!=null)
-    		guess = word.toLowerCase().split("");
-        return word != null && word.equalsIgnoreCase(this.toString());
+        if (word == null) return false;
+        
+        boolean correct = word.equalsIgnoreCase(this.toString());
+        
+        if (correct) {
+            this.guess = word.toLowerCase().split("");
+        }
+        
+        return correct;
     }
 
     public boolean isGuessed() {

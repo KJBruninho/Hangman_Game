@@ -37,10 +37,10 @@ public final class Menus {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\n").append("=".repeat(49)).append("\n");
-        sb.append(" Escolha a Dificuldade: \n"
-    			+ " [1]Facil.	(palavras de 3 a 4 letras)\n"
-    			+ " [2]Media.	(palavras de 5 a 7 letras)\n"
-    			+ " [3]Dificil.	(palavras de 7 ou mais letras)\n"
+        sb.append(" Escolha o tamanho: \n"
+    			+ " [1]Pequeno.	(palavras de 3 a 4 letras)\n"
+    			+ " [2]Medio.	(palavras de 5 a 7 letras)\n"
+    			+ " [3]Grande.	(palavras de 7 ou mais letras)\n"
     			+ " [4]Aleatorio."
         ); 
         sb.append("\n").append("=".repeat(49)).append(		   "\n");
@@ -210,9 +210,9 @@ public final class Menus {
             sb.append("         \\____/   \\/   |______|_|  \\_\\           \n");
             sb.append("=================================================\n");
         } else {
-            sb.append("=================================================\n");
+            sb.append("==================================================\n");
             sb.append(" X Infelizmente a gravata estava muito apertada! X\n");
-            sb.append("=================================================\n");
+            sb.append("==================================================\n");
             sb.append("          _____          __  __ ______           \n");
             sb.append("         / ____|   /\\   |  \\/  |  ____|          \n");
             sb.append("        | |  __   /  \\  | \\  / | |__             \n");
@@ -225,7 +225,7 @@ public final class Menus {
             sb.append("        | |  | |\\ \\/ / |  __| |  _  /            \n");
             sb.append("        | |__| | \\  /  | |____| | \\ \\            \n");
             sb.append("         \\____/   \\/   |______|_|  \\_\\           \n");
-            sb.append("=================================================\n");
+            sb.append("==================================================\n");
         }
         sb.append("=".repeat(49)).append("\n");
         sb.append(" [1] Menu Inicial\n");
