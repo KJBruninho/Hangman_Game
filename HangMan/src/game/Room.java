@@ -31,6 +31,37 @@ public class Room extends Thread {
         this.inGame = false;
         start();
     }
+    
+//Getters and Setters    
+    public int getDifficulty() { 
+    	return difficulty; 
+    }
+    
+    public int getNumPlayers() { 
+    	return numPlayers; 
+    }
+    
+    public int getCapacity() { 
+    	return capacity; 
+    }
+    
+    public boolean getinGame() {
+    	return inGame;
+    }
+
+    public String getPrintDifficulty() {
+    	switch (this.getDifficulty()) {
+    	case 1:
+    		return "Dificuldade: Facil";
+    	case 2:
+    		return "Dificuldade: Media";
+    	case 3:
+    		return "Dificuldade: Dificil";
+    	default:
+    		return "Dificuldade: Aleatorio";
+    				
+    	}
+    }
 
 //Methods
     public void enterRoom(Message playerMsg) throws IOException {
@@ -73,38 +104,6 @@ public class Room extends Thread {
         }
     }
 
-    public String getPrintDifficulty() {
-    	switch (this.getDifficulty()) {
-    	case 1:
-    		return "Dificuldade: Facil";
-    	case 2:
-    		return "Dificuldade: Media";
-    	case 3:
-    		return "Dificuldade: Dificil";
-    	default:
-    		return "Dificuldade: Aleatorio";
-    				
-    	}
-    }
-    
-//Getters and Setters    
-    public int getDifficulty() { 
-    	return difficulty; 
-    }
-    
-    public int getNumPlayers() { 
-    	return numPlayers; 
-    }
-    
-    public int getCapacity() { 
-    	return capacity; 
-    }
-    
-    public boolean getinGame() {
-    	return inGame;
-    }
-    
-    
 //Overrided Methods    
     @Override
     public void run() {

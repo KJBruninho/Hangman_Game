@@ -7,12 +7,14 @@ public class Client_Read extends Thread {
     private Socket s;
     private Message msg;
 
+//Constructors    
     public Client_Read(Socket s, Message msg) {
         this.s = s;
         this.msg = msg;
         start();
     }
-
+    
+//Overrided Methods
     @Override
     public void run() {
         try {

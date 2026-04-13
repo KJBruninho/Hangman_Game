@@ -11,18 +11,28 @@ public class Message {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+//Constructors    
     public Message(Socket s) throws IOException {
         this.setSocket(s);
         this.out = new ObjectOutputStream(s.getOutputStream());
         this.out.flush(); 
         this.in = new ObjectInputStream(s.getInputStream());
     }
- 
+
+//Getters ee Seetters
+    public Socket getSocket() {
+    	return s;
+    }
+    
+    public void setSocket(Socket s) {
+    	this.s = s;
+    }
     public void send(Object obj) throws IOException {
         out.writeObject(obj); 
         out.flush();
     }
-
+    
+//Methods
     public Object receive() throws Exception {
         return in.readObject();
     }
@@ -33,11 +43,4 @@ public class Message {
         }
     }
 
-	public Socket getSocket() {
-		return s;
-	}
-
-	public void setSocket(Socket s) {
-		this.s = s;
-	}
 }

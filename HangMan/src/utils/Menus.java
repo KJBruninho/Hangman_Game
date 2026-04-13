@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Menus {
@@ -8,6 +9,7 @@ public final class Menus {
 		throw new UnsupportedOperationException("Can't make an instance Obj of this class!");
 	}
 	
+//Printable Methods
 	public static String printMenuLobby() {
         StringBuilder sb = new StringBuilder();
 
@@ -184,6 +186,35 @@ public final class Menus {
         }
 
         return "VIDAS: " + barra.toString() + "\n"+ STAGES[maxVidas-vidasRestantes];
+    }
+    
+    public static String gerarTabelaPontuacao(String titulo, Message[] players, int[] scores) {
+        StringBuilder sb = new StringBuilder();
+        
+        // Criar uma lista de índices para ordenar sem perder a referência ao jogador original
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] != null) indices.add(i);
+        }
+
+        // Ordenar os índices com base nos scores (Descendente)
+        indices.sort((a, b) -> Integer.compare(scores[b], scores[a]));
+
+        sb.append("\n\t").append("╔═══════════════════════════════════════════╗").append("\n");
+        sb.append("\t║ ").append(String.format("%-41s", titulo)).append(" ║").append("\n");
+        sb.append("\t╠═══════════════════════╦═══════════════════╣").append("\n");
+        sb.append("\t║       JOGADOR         ║      PONTOS       ║").append("\n");
+        sb.append("\t╠═══════════════════════╬═══════════════════╣").append("\n");
+
+        for (int idx : indices) {
+            String nome = "Jogador " + (idx + 1);
+            sb.append("\t║ ").append(String.format("%-21s", nome))
+              .append(" ║ ").append(String.format("%17d", scores[idx]))
+              .append(" ║").append("\n");
+        }
+
+        sb.append("\t╚═══════════════════════╩═══════════════════╝").append("\n");
+        return sb.toString();
     }
 
     public static String printFimJogo(boolean ganhou, String palavraCorreta) {

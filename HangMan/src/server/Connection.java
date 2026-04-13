@@ -11,7 +11,7 @@ public class Connection extends Thread {
 	private Socket s;
 	private Lobby l;
 	
-	//Constructors
+//Constructors
 	public Connection(){
 		super();
 		start();
@@ -22,7 +22,8 @@ public class Connection extends Thread {
 		this.s = s;
 		start();
 	}
-	
+
+//Getters e Setters
 	public Lobby getLobby() {
 		return l;
 	}
@@ -30,14 +31,14 @@ public class Connection extends Thread {
 	public void setLobby(Lobby l) {
 		this.l = l;
 	}
-	
+
+//Overrided Methods 	
 	@Override
     public void run () {
     	try {
     		Message msg = new Message(s);
-    		msg.send("	Novo jogador! Seja bem-vindo.");
-    		msg.send("	O jogo comecara em breve.");
-    		msg.send("	A entrar num Lobby..."); 
+    		msg.send("	> Novo jogador! Seja bem-vindo.");
+    		msg.send("	> A entrar num Lobby..."); 
     		setLobby(new Lobby(msg));
     		
 		} catch (IOException e) {

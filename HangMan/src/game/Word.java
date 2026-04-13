@@ -14,6 +14,7 @@ public class Word {
     private static final String[] FILE_PATH = {"palavrasF.txt","palavrasM.txt","palavrasD.txt"};
     private static final Random RANDOM = new Random();
 
+//Constructors    
     public Word(int difficulty) {
         List<String> linhas = null;
         try {
@@ -52,6 +53,7 @@ public class Word {
         Arrays.fill(this.guess, "_");
     }
 
+//Methods    
     public String printGuess() {
         return String.join(" ", this.guess);
     }
@@ -85,7 +87,8 @@ public class Word {
     public boolean isGuessed() {
         return Arrays.equals(palavra, guess);
     }
-
+    
+//Overrided Methods
     @Override
     public String toString() {
         return String.join("", this.palavra).toLowerCase();

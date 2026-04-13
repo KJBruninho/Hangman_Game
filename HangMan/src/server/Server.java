@@ -8,7 +8,8 @@ public class Server {
 	private ServerSocket ss;
 	private Socket s;
 	private Connection c;	
-	
+
+//Constructors	
 	public Server() {
 		try {
 			ss = new ServerSocket(5432); 

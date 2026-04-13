@@ -9,13 +9,15 @@ import utils.Message;
 public class Client_Write extends Thread {
     private Socket s;
     private Message msg;
-
+    
+//Constructors  
     public Client_Write(Socket s,Message msg) throws IOException {
         this.s = s;
         this.msg = msg;
         start(); 
     }
-
+    
+//Overrided Methods
     @Override
     public void run() {
         try {
