@@ -3,220 +3,83 @@ package game;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import utils.Menus;
 import utils.Message;
 
 public class Game {
 
     private int turn = 0;
-
     private static final int MAX_LIVES = 7;
+    private final int[] lives;
+    private int livesPart;
+    private final Word word;
+    private final Message[] players;
+    private final List<String> triedLetters;
+    private int numPlayers;
+    private final int[] scores;
 
-    private final int[] 		lives;
-    private int 				livesPart;
-    private final Word 			word;
-    private final Message[] 	players;
-    private final List<String> 	triedLetters;
-    private int					numPlayers;		
-    private final int[]			scores;
-
-//Constructor
-    public Game(Message[] players , int difficulty) {
+    public Game(Message[] players, int difficulty) {
         this.players = players;
-
         this.lives = new int[players.length];
-
         for (int i = 0; i < players.length; i++) {
             lives[i] = MAX_LIVES;
         }
-        
         this.livesPart = MAX_LIVES;
         this.word = new Word(difficulty);
         this.triedLetters = new ArrayList<>();
         this.scores = new int[players.length];
         this.numPlayers = players.length;
-        
-        for(Message player : players) {
-        	if(player==null)
-        		--numPlayers;
+
+        for (Message player : players) {
+            if (player == null) --numPlayers;
         }
     }
 
-//Methods
     private void broadcast(String text) {
-        for (Message p : players) {
-            if (p != null) { 
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] != null) {
                 try {
-                    p.send(text);
+                    players[i].send(text);
                 } catch (IOException e) {
-                    System.out.println("Broadcast error: " + e.getMessage());
+                    System.out.println("Jogador " + (i + 1) + " desconectou-se.");
+                    players[i] = null;
+                    numPlayers--;
                 }
             }
         }
     }
 
-    private boolean allPlayersDead() {
-        for (int life : lives) {
-            if (life > 0) {
-                return false;
+    private boolean isGameOver(int modo) {
+        if (modo == 1) { 
+            return livesPart <= 0;
+        } else { 
+            for (int life : lives) {
+                if (life > 0) return false;
             }
+            return true;
         }
-        return true;
     }
-    
-    private void updatePlayerScore(int playerIdx, int points) {
+
+    private void updateSelfScore(int playerIdx, int points) {
+        if (players[playerIdx] == null) return;
         scores[playerIdx] += points;
         try {
-        	players[playerIdx].send("\n__________________________________________________\n");
-            players[playerIdx].send("	|PLAY POINTS: " + points + "\n	|TOTAL: " + scores[playerIdx]);
-            players[playerIdx].send("__________________________________________________\n");
+            players[playerIdx].send("\n__________________________________________________\n"
+            					  + "	|PONTOS DE JOGADA: " + points + "\n	|TOTAL: " + scores[playerIdx]
+            					  + "\n__________________________________________________\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            players[playerIdx] = null;
+            numPlayers--;
         }
     }
-    
-    private void printUpdateScores(int playerIdx, int points) {
-        broadcast(Menus.generateScoreboard("CURRENT SCORE", players, scores));
-    }
 
-    public synchronized void playInd() {
-
+    public synchronized void play(int modo) {
         try {
-        	
-        	broadcast("==================================================");
-            broadcast("================  THE GAME HAS BEGUN!  ===============");
+            broadcast("==================================================");
+            broadcast("================  O JOGO COMEÇOU!  ===============");
+            System.out.println("Solução: " + word); 
 
-            System.out.println(word);
-
-            while (!word.isGuessed() && !allPlayersDead()) {
-
-                int playerIndex = turn % players.length;
-                
-                if(players[playerIndex] == null) {
-                	turn++;
-                }
-
-                if (lives[playerIndex] <= 0) {
-                    turn++;
-                    continue;
-                }
-
-                Message current_Player = players[playerIndex];
-                try {
-                	if (numPlayers > 1) {
-                        current_Player.getSocket().setSoTimeout(15000);
-                    } else {
-                        current_Player.getSocket().setSoTimeout(0);
-                    }
-	                
-	                broadcast("==================================================");
-	                broadcast("				Player " + (playerIndex + 1) + " turn" + "\n");
-	                current_Player.send(Menus.printLives(lives[playerIndex]));
-	                broadcast("Word:  | " + word.printGuess() + " |");
-	                current_Player.send(Menus.printTriedLetters(triedLetters));
-	                current_Player.send("\n"
-	                		   + " >It's your turn!\n"
-	                		   + " >Enter a letter or a word: ");
-	
-	                boolean correctL = false;
-	                boolean correctW = false;
-	                
-	                Object obj = current_Player.receive();
-	                current_Player.getSocket().setSoTimeout(0);
-	                String guess = ((String) obj).toLowerCase();
-	                
-	                if (guess.length() == 1) {
-	
-	                    if (triedLetters.contains(guess.toUpperCase())) {
-	
-	                        current_Player.send("This letter has already been tried.");
-	                        updatePlayerScore(playerIndex, -1);
-	                        turn++;
-	                        continue;
-	
-	                    }
-	
-	                    triedLetters.add(guess.toUpperCase());
-	
-	                    correctL = word.guessLetter(guess);
-	                    
-	                    if (!correctL) {
-	                        lives[playerIndex]--;
-	
-	                        broadcast("\n Player " + (playerIndex + 1) + " failed! \n"
-	                        		+ " Remaining lives: " + lives[playerIndex] 
-	                        		+ "\n");
-	                        updatePlayerScore(playerIndex, -5);
-	                        
-	                        if (lives[playerIndex] == 0) {
-	                            broadcast("	Player " + (playerIndex + 1) +" was eliminated!\n" + Menus.printLives(lives[playerIndex]));
-	                            updatePlayerScore(playerIndex, -30);
-	                        }
-	                        
-	                    } else {
-	                        broadcast("\n Player " + (playerIndex + 1) + " got it right!");
-	                        updatePlayerScore(playerIndex, 10);
-	                    }
-	
-	                } else {                    	
-	                    correctW = word.guessWord(guess);	                    
-
-		                    if (!correctW) {
-		                    	if(lives[playerIndex]>2)
-		                    		lives[playerIndex]-= 2;
-		                    	else {
-		                    		lives[playerIndex]--;
-		                    	}
-		                        broadcast("\n Player " + (playerIndex + 1) + " tried to guess but was unsuccessful! \n"
-		                        		+ " Remaining lives: " + lives[playerIndex] 
-		                        		+ "\n");
-		                        updatePlayerScore(playerIndex, -20);
-		                        
-		                        if (lives[playerIndex] == 0) {
-		                            broadcast("	Player " + (playerIndex + 1) +" was eliminated!\n" + Menus.printLives(lives[playerIndex]));
-		                            updatePlayerScore(playerIndex, -50);
-		                            printUpdateScores(playerIndex,scores[playerIndex]);
-		                        }
-		                        
-		                    } else {
-		                        broadcast("\n Player " + (playerIndex + 1) + " guessed the word!\n"
-		                        		+ " Congratulations!\n");
-		                        updatePlayerScore(playerIndex, 100);
-		                        
-		                    }	                    
-	                }
-	                turn++;
-                }
-                catch (java.net.SocketTimeoutException e) {
-                	if(numPlayers>1) {                     		
-                		current_Player.getSocket().setSoTimeout(0);
-                		turn++;
-                		broadcast("Player " + playerIndex + " game time has ended. (15s)\n");
-                		updatePlayerScore(playerIndex, -2);
-                	}
-                }
-            }
-
-            broadcast(Menus.generateScoreboard("FINAL RANKING - GAME ENDED", players, scores));
-            broadcast(Menus.printEndGame(word.isGuessed(), word.toString()));
-
-        } catch (Exception e) {
-            System.out.println("Game error: " + e.getMessage());
-        }
-         
-    }
-    
-    public synchronized void playPart() {
-
-        try {
-        	broadcast("==================================================");
-            broadcast("================  THE GAME HAS BEGUN!  ===============");
-
-            System.out.println(word);
-
-            while (!word.isGuessed() && livesPart != 0) {
-
+            while (!word.isGuessed() && !isGameOver(modo)) {
                 int playerIndex = turn % players.length;
 
                 if (players[playerIndex] == null) {
@@ -224,98 +87,93 @@ public class Game {
                     continue;
                 }
 
-                Message current_Player = players[playerIndex];
-	            
-                try {
-                	if (numPlayers > 1) {
-                        current_Player.getSocket().setSoTimeout(15000);
-                    } else {
-                        current_Player.getSocket().setSoTimeout(0);
-                    }
-                	
-	                broadcast("==================================================");
-	                broadcast("				Player " + (playerIndex + 1) + " turn" + "\n");
-	                current_Player.send(Menus.printLives(livesPart));
-	                broadcast("Word:  | " + word.printGuess() + " |");
-	                current_Player.send(Menus.printTriedLetters(triedLetters));
-	                current_Player.send("\n"
-	                		   + " >It's your turn!\n"
-	                		   + " >Enter a letter or a word: ");
-	
-	                boolean correctL = false;
-	                boolean correctW = false;
-	                
-	                Object obj = current_Player.receive();
-	                current_Player.getSocket().setSoTimeout(0);
-	                String guess = ((String) obj).toLowerCase();
-	
-	                if (guess.length() == 1) {
-	
-	                    if (triedLetters.contains(guess.toUpperCase())) {
-	                        current_Player.send("This letter has already been tried.");
-	                        updatePlayerScore(playerIndex, -1);
-	                        turn++;
-	                        continue;
-	
-	                    }
-	
-	                    triedLetters.add(guess.toUpperCase());
-	
-	                    correctL = word.guessLetter(guess);
-	                    
-	                    if (!correctL) {
-	                    	livesPart--;
-	                    	
-	                        broadcast(" >Player " + (playerIndex + 1) + " failed! \n"
-	                        		+ " >Remaining lives: " + livesPart
-	                        		+ "\n");
-	                        updatePlayerScore(playerIndex, -2);
-	                    } else {                    	
-	                        broadcast(" >Player " + (playerIndex + 1) + " got it right!");
-	                        updatePlayerScore(playerIndex, 10);
-	                    }
-	
-	                } else {                    	
-	                    correctW = word.guessWord(guess);
-		                    if (!correctW) {
-		                    	if(livesPart>2)
-		                    		livesPart -= 2;
-		                    	else {
-		                    		livesPart--;
-		                    	}
-		
-		                        broadcast(" >Player " + (playerIndex + 1) + " tried to guess but was unsuccessful! \n"
-		                        		+ " >Remaining lives: " + livesPart
-		                        		+ "\n");
-		                        updatePlayerScore(playerIndex, -25);
-		                    } else {
-		                    	
-		                        broadcast(" >Player " + (playerIndex + 1) + " guessed the word!\n"
-		                        		+ " >Congratulations!\n");
-		                        updatePlayerScore(playerIndex, 70);
-		                    }
-	                    }
-	                turn++;
-	            }
-                catch (java.net.SocketTimeoutException e) {
-                	if(numPlayers>1) {
-                		current_Player.getSocket().setSoTimeout(0);
-                		turn++;
-                		broadcast("Player " + playerIndex + " game time has ended. (15s)\n");
-                		updatePlayerScore(playerIndex, -2);
-                	}                	
+                if (modo != 1 && lives[playerIndex] <= 0) {
+                    turn++;
+                    continue;
                 }
-            
+
+                Message current_Player = players[playerIndex];
+
+                try {
+                    current_Player.getSocket().setSoTimeout(numPlayers > 1 ? 15000 : 0);
+
+                    broadcast("==================================================");
+                    broadcast("				Turno do jogador " + (playerIndex + 1) + "\n");
+                    
+                    int vidasAtuais = (modo == 1) ? livesPart : lives[playerIndex];
+                    current_Player.send(Menus.printLifes(vidasAtuais));
+                    broadcast("Palavra:  | " + word.printGuess() + " |");
+                    current_Player.send(Menus.printRoomType(triedLetters));
+                    current_Player.send("\n >É a tua vez!\n >Insere uma letra ou palavra: ");
+
+                    Object obj = current_Player.receive();
+                    current_Player.getSocket().setSoTimeout(0);
+                    if (obj == null) throw new IOException(); 
+                    
+                    String guess = ((String) obj).toLowerCase();
+
+                    if (guess.length() == 1) {
+                        if (triedLetters.contains(guess.toUpperCase())) {
+                            current_Player.send("Essa letra já foi tentada.");
+                            updateSelfScore(playerIndex, -1);
+                            turn++;
+                            continue;
+                        }
+
+                        triedLetters.add(guess.toUpperCase());
+                        if (!word.guessLetter(guess)) {
+                            if (modo == 1) livesPart--; else lives[playerIndex]--;
+                            
+                            int sobra = (modo == 1) ? livesPart : lives[playerIndex];
+                            broadcast("\n Jogador " + (playerIndex + 1) + " errou! \n Vidas restantes: " + sobra + "\n");
+                            updateSelfScore(playerIndex, (modo == 1) ? -2 : -5);
+
+                            if (sobra <= 0 && modo != 1) {
+                                broadcast("	Jogador " + (playerIndex + 1) + " foi eliminado!\n" + Menus.printLifes(0));
+                                updateSelfScore(playerIndex, -30);
+                            }
+                        } else {
+                            broadcast("\n Jogador " + (playerIndex + 1) + " acertou!");
+                            updateSelfScore(playerIndex, 10);
+                        }
+                    } else {
+                        if (!word.guessWord(guess)) {
+                            int penalizacao = (vidasAtuais > 2) ? 2 : 1;
+                            if (modo == 1) livesPart -= penalizacao; else lives[playerIndex] -= penalizacao;
+                            
+                            int sobra = (modo == 1) ? livesPart : lives[playerIndex];
+                            broadcast("\n Jogador " + (playerIndex + 1) + " falhou a palavra! \n Vidas restantes: " + sobra + "\n");
+                            updateSelfScore(playerIndex, (modo == 1) ? -25 : -20);
+
+                            if (sobra <= 0 && modo != 1) {
+                                broadcast("	Jogador " + (playerIndex + 1) + " foi eliminado!\n" + Menus.printLifes(0));
+                                updateSelfScore(playerIndex, -50);
+                            }
+                        } else {
+                            broadcast("\n Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n Parabéns!\n");
+                            updateSelfScore(playerIndex, (modo == 1) ? 70 : 100);
+                        }
+                    }
+                    turn++;
+
+                } catch (java.net.SocketTimeoutException e) {
+                    current_Player.getSocket().setSoTimeout(0);
+                    broadcast("Tempo do Jogador " + (playerIndex + 1) + " terminou. (15s)\n");
+                    updateSelfScore(playerIndex, -2);
+                    turn++;
+                } catch (IOException e) {
+                    System.out.println("Jogador " + (playerIndex + 1) + " caiu durante o turno.");
+                    players[playerIndex] = null;
+                    numPlayers--;
+                    turn++;
+                }
             }
 
-            broadcast(Menus.generateScoreboard("FINAL RANKING - GAME ENDED", players, scores));
+            broadcast(Menus.generateScoreboard("RANKING FINAL - FIM DE JOGO", players, scores));
             broadcast(Menus.printEndGame(word.isGuessed(), word.toString()));
 
         } catch (Exception e) {
-            System.out.println("Game error: " + e.getMessage());
+            System.out.println("Erro crítico no jogo: " + e.getMessage());
         }
     }
-    
-    
-
 }

@@ -25,7 +25,7 @@ public class Client_Read extends Thread {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Connection closed.");
+            System.out.println("Conexão encerrada.");
         }
     }
 }

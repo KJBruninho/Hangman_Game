@@ -15,6 +15,7 @@ public class Server {
 			ss = new ServerSocket(5432); 
 			while(true) {
 				s  = ss.accept();
+				ss.setReuseAddress(true);
 				c  = new Connection(s);	
 				if(c.isAlive()) {
 					System.out.println("Connection made by " + s + " with "+c.getName());

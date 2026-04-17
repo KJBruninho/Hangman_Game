@@ -26,7 +26,7 @@ public class Client_Write extends Thread {
                 msg.send(input);
             }
         } catch (Exception e) {
-            System.out.println("Finished writing: " + e.getMessage());
+            System.out.println("Escrita terminada: " + e.getMessage());
         } 
     }
 }

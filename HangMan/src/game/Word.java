@@ -37,14 +37,14 @@ public class Word {
             }
 
             if (linhas == null || linhas.isEmpty()) {
-                throw new IOException("The word file is empty or has not been loaded.");
+                throw new IOException("O ficheiro de palavras está vazio ou não foi carregado.");
             }
 
             String escolhida = linhas.get(RANDOM.nextInt(linhas.size())).trim();
             this.palavra = escolhida.split("");
 
         } catch (IOException e) {
-            System.err.println("Error loading words: " + e.getMessage());
+            System.err.println("Erro ao carregar palavras: " + e.getMessage());
             // Fallback caso o ficheiro falhe
             this.palavra = new String[]{"j", "a", "v", "a"};
         }

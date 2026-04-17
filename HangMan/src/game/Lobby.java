@@ -30,7 +30,7 @@ public class Lobby extends Thread {
                 break;
             case 2:
                 msg.send(listRoomsInd());
-                msg.send(" > Enter a number (or press Enter to go back):");
+                msg.send(" >Introduza o numero (ou pressione Enter para voltar):");
                 Object received2 = msg.receive();
                 if (received2 == null) return;
                 try {
@@ -47,7 +47,7 @@ public class Lobby extends Thread {
                 break;
             case 3:
                 msg.send(listRoomsPart());
-                msg.send(" > Enter a number:");
+                msg.send(" >Introduza o numero:");
                 Object received3 = msg.receive();
                 if (received3 == null) return;
                 try {
@@ -63,7 +63,7 @@ public class Lobby extends Thread {
                 }
                 break;
             case 4:
-            	msg.send("Enter the room capacity:");
+            	msg.send("Introduza a capacidade da sala:");
             	
             	Object capReceived = msg.receive();
             	if (capReceived == null) return;
@@ -72,7 +72,7 @@ public class Lobby extends Thread {
             	try {
             		capacity = Integer.parseInt((String) capReceived);
             	} catch (NumberFormatException e) {
-            		msg.send("Invalid Value.");
+            		msg.send("Valor invalido.");
             		break;
             	}
             	
@@ -110,13 +110,13 @@ public class Lobby extends Thread {
     			roomsPart.remove(room);
     	}
         if (roomsPart.isEmpty()) 
-        	return " There are no rooms available.\n"
-        		 + " Press Enter key to go back.\n";
+        	return " Nao existem salas disponiveis.\n"
+        		 + " Precione Enter tecla para voltar.\n";
         
-        StringBuilder res = new StringBuilder("\nRooms:\n");
+        StringBuilder res = new StringBuilder("\nSalas:\n");
         
         for (int i = 0; i < roomsPart.size(); i++) {
-            res.append("Room ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
+            res.append("Sala ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
 	}
@@ -127,13 +127,13 @@ public class Lobby extends Thread {
     			roomsInd.remove(room);
     	}
         if (roomsInd.isEmpty()) 
-        	return " There are no rooms available.\n"
-        		 + " Press Enter key to go back.\n";
+        	return " Nao existem salas disponiveis.\n"
+        		 + " Precione Enter tecla para voltar.\n";
         
-        StringBuilder res = new StringBuilder("\n:\n");
+        StringBuilder res = new StringBuilder("\nSalas:\n");
         
         for (int i = 0; i < roomsInd.size(); i++) {
-            res.append("Room ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
+            res.append("Sala ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
     }
@@ -164,7 +164,7 @@ public class Lobby extends Thread {
                 chooseMenu(Integer.parseInt((String) input));
             }
         } catch (Exception e) {
-            System.out.println("Lobby terminated.");
+            System.out.println("Lobby encerrado.");
         }
     }
 }
