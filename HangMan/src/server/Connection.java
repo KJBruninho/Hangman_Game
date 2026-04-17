@@ -37,8 +37,8 @@ public class Connection extends Thread {
     public void run () {
     	try {
     		Message msg = new Message(s);
-    		msg.send("	> Novo jogador! Seja bem-vindo.");
-    		msg.send("	> A entrar num Lobby..."); 
+    		msg.send("	> New Player! Welcome.");
+    		msg.send("	> Entering a Lobby..."); 
     		setLobby(new Lobby(msg));
     		
 		} catch (IOException e) {

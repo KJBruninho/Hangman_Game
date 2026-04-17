@@ -52,13 +52,13 @@ public class Room extends Thread {
     public String getPrintDifficulty() {
     	switch (this.getDifficulty()) {
     	case 1:
-    		return "Dificuldade: Facil";
+    		return "Difficulty: Easy";
     	case 2:
-    		return "Dificuldade: Media";
+    		return "Difficulty: Medium";
     	case 3:
-    		return "Dificuldade: Dificil";
+    		return "Difficulty: Hard";
     	default:
-    		return "Dificuldade: Aleatorio";
+    		return "Difficulty: Random";
     				
     	}
     }
@@ -67,24 +67,24 @@ public class Room extends Thread {
     public void enterRoom(Message playerMsg) throws IOException {
         try {
             if (!sem.tryAcquire()) {
-                playerMsg.send("A sala está cheia!");
+                playerMsg.send("The room is full!");
                 return;
             }
          
             synchronized (this) { 
             	players[numPlayers++] = playerMsg;
 
-                broadcast("Player"+ numPlayers + "  na sala (" + numPlayers + "/" + capacity + " jogadores).");
+                broadcast("Player "+ numPlayers + "  in the room (" + numPlayers + "/" + capacity + " players).");
                
                 if (numPlayers < capacity) {
-                    playerMsg.send(" Aguarde o preenchimento da sala ou o fim do tempo de espera.\n");
+                    playerMsg.send(" Please wait until the room is full or the waiting time has ended..\n");
                 }
                 
                 notifyAll();
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao entrar na sala: " + e.getMessage());
+            System.err.println("Error entering the room: " + e.getMessage());
         }
     }
     
@@ -98,7 +98,7 @@ public class Room extends Thread {
                 try {
                     p.send(text);
                 } catch (IOException e) {
-                    System.out.println("Erro no broadcast: " + e.getMessage());
+                    System.out.println("Broadcast error: " + e.getMessage());
                 }
             }
         }
@@ -137,7 +137,7 @@ public class Room extends Thread {
     	
     	inGame = true;
 
-    	broadcast("O jogo vai começar!\n");
+    	broadcast("The game will start!\n");
     	switch(difficulty) {
     		case 1:
     			new Game(players,difficulty).playInd();

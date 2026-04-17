@@ -50,7 +50,7 @@ public class Game {
                 try {
                     p.send(text);
                 } catch (IOException e) {
-                    System.out.println("Erro no broadcast: " + e.getMessage());
+                    System.out.println("Broadcast error: " + e.getMessage());
                 }
             }
         }
@@ -65,19 +65,19 @@ public class Game {
         return true;
     }
     
-    private void updateScore(int playerIdx, int points) {
+    private void updatePlayerScore(int playerIdx, int points) {
         scores[playerIdx] += points;
         try {
         	players[playerIdx].send("\n__________________________________________________\n");
-            players[playerIdx].send("	|PONTOS DE JOGADA: " + points + "\n	|TOTAL: " + scores[playerIdx]);
+            players[playerIdx].send("	|PLAY POINTS: " + points + "\n	|TOTAL: " + scores[playerIdx]);
             players[playerIdx].send("__________________________________________________\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-    private void atualizarPontos(int playerIdx, int pontosGanhos) {
-        broadcast(Menus.gerarTabelaPontuacao("PONTUAÇÃO ATUAL", players, scores));
+    private void printUpdateScores(int playerIdx, int points) {
+        broadcast(Menus.generateScoreboard("CURRENT SCORE", players, scores));
     }
 
     public synchronized void playInd() {
@@ -85,7 +85,7 @@ public class Game {
         try {
         	
         	broadcast("==================================================");
-            broadcast("================  O JOGO COMEÇOU!  ===============");
+            broadcast("================  THE GAME HAS BEGUN!  ===============");
 
             System.out.println(word);
 
@@ -111,13 +111,13 @@ public class Game {
                     }
 	                
 	                broadcast("==================================================");
-	                broadcast("				Turno do jogador " + (playerIndex + 1) + "\n");
-	                current_Player.send(Menus.printVida(lives[playerIndex]));
-	                broadcast("Palavra:  | " + word.printGuess() + " |");
-	                current_Player.send(Menus.printLetrasTentadas(triedLetters));
+	                broadcast("				Player " + (playerIndex + 1) + " turn" + "\n");
+	                current_Player.send(Menus.printLives(lives[playerIndex]));
+	                broadcast("Word:  | " + word.printGuess() + " |");
+	                current_Player.send(Menus.printTriedLetters(triedLetters));
 	                current_Player.send("\n"
-	                		   + " >É a tua vez!\n"
-	                		   + " >Insere uma letra ou palavra: ");
+	                		   + " >It's your turn!\n"
+	                		   + " >Enter a letter or a word: ");
 	
 	                boolean correctL = false;
 	                boolean correctW = false;
@@ -130,8 +130,8 @@ public class Game {
 	
 	                    if (triedLetters.contains(guess.toUpperCase())) {
 	
-	                        current_Player.send("Essa letra já foi tentada.");
-	                        updateScore(playerIndex, -1);
+	                        current_Player.send("This letter has already been tried.");
+	                        updatePlayerScore(playerIndex, -1);
 	                        turn++;
 	                        continue;
 	
@@ -144,19 +144,19 @@ public class Game {
 	                    if (!correctL) {
 	                        lives[playerIndex]--;
 	
-	                        broadcast("\n Jogador " + (playerIndex + 1) + " errou! \n"
-	                        		+ " Vidas restantes: " + lives[playerIndex] 
+	                        broadcast("\n Player " + (playerIndex + 1) + " failed! \n"
+	                        		+ " Remaining lives: " + lives[playerIndex] 
 	                        		+ "\n");
-	                        updateScore(playerIndex, -5);
+	                        updatePlayerScore(playerIndex, -5);
 	                        
 	                        if (lives[playerIndex] == 0) {
-	                            broadcast("	Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
-	                            updateScore(playerIndex, -30);
+	                            broadcast("	Player " + (playerIndex + 1) +" was eliminated!\n" + Menus.printLives(lives[playerIndex]));
+	                            updatePlayerScore(playerIndex, -30);
 	                        }
 	                        
 	                    } else {
-	                        broadcast("\n Jogador " + (playerIndex + 1) + " acertou!");
-	                        updateScore(playerIndex, 10);
+	                        broadcast("\n Player " + (playerIndex + 1) + " got it right!");
+	                        updatePlayerScore(playerIndex, 10);
 	                    }
 	
 	                } else {                    	
@@ -168,21 +168,21 @@ public class Game {
 		                    	else {
 		                    		lives[playerIndex]--;
 		                    	}
-		                        broadcast("\n Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
-		                        		+ " Vidas restantes: " + lives[playerIndex] 
+		                        broadcast("\n Player " + (playerIndex + 1) + " tried to guess but was unsuccessful! \n"
+		                        		+ " Remaining lives: " + lives[playerIndex] 
 		                        		+ "\n");
-		                        updateScore(playerIndex, -20);
+		                        updatePlayerScore(playerIndex, -20);
 		                        
 		                        if (lives[playerIndex] == 0) {
-		                            broadcast("	Jogador " + (playerIndex + 1) +" foi eliminado!\n" + Menus.printVida(lives[playerIndex]));
-		                            updateScore(playerIndex, -50);
-		                            atualizarPontos(playerIndex,scores[playerIndex]);
+		                            broadcast("	Player " + (playerIndex + 1) +" was eliminated!\n" + Menus.printLives(lives[playerIndex]));
+		                            updatePlayerScore(playerIndex, -50);
+		                            printUpdateScores(playerIndex,scores[playerIndex]);
 		                        }
 		                        
 		                    } else {
-		                        broadcast("\n Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
-		                        		+ " Muitos parabéns!\n");
-		                        updateScore(playerIndex, 100);
+		                        broadcast("\n Player " + (playerIndex + 1) + " guessed the word!\n"
+		                        		+ " Congratulations!\n");
+		                        updatePlayerScore(playerIndex, 100);
 		                        
 		                    }	                    
 	                }
@@ -192,14 +192,14 @@ public class Game {
                 	if(numPlayers>1) {                     		
                 		current_Player.getSocket().setSoTimeout(0);
                 		turn++;
-                		broadcast("Tempo de jogo do Jogador " + (playerIndex + 1) + " terminou. (15s)\n");
-                		updateScore(playerIndex, -2);
+                		broadcast("Player " + playerIndex + " game time has ended. (15s)\n");
+                		updatePlayerScore(playerIndex, -2);
                 	}
                 }
             }
 
-            broadcast(Menus.gerarTabelaPontuacao("RANKING FINAL - FIM DE JOGO", players, scores));
-            broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
+            broadcast(Menus.generateScoreboard("FINAL RANKING - GAME ENDED", players, scores));
+            broadcast(Menus.printEndGame(word.isGuessed(), word.toString()));
 
         } catch (Exception e) {
             System.out.println("Game error: " + e.getMessage());
@@ -211,7 +211,7 @@ public class Game {
 
         try {
         	broadcast("==================================================");
-            broadcast("================  O JOGO COMEÇOU!  ===============");
+            broadcast("================  THE GAME HAS BEGUN!  ===============");
 
             System.out.println(word);
 
@@ -234,13 +234,13 @@ public class Game {
                     }
                 	
 	                broadcast("==================================================");
-	                broadcast("				Turno do jogador " + (playerIndex + 1) + "\n");
-	                current_Player.send(Menus.printVida(livesPart));
-	                broadcast("Palavra:  | " + word.printGuess() + " |");
-	                current_Player.send(Menus.printLetrasTentadas(triedLetters));
+	                broadcast("				Player " + (playerIndex + 1) + " turn" + "\n");
+	                current_Player.send(Menus.printLives(livesPart));
+	                broadcast("Word:  | " + word.printGuess() + " |");
+	                current_Player.send(Menus.printTriedLetters(triedLetters));
 	                current_Player.send("\n"
-	                		   + " >É a tua vez!\n"
-	                		   + " >Insere uma letra ou palavra: ");
+	                		   + " >It's your turn!\n"
+	                		   + " >Enter a letter or a word: ");
 	
 	                boolean correctL = false;
 	                boolean correctW = false;
@@ -252,8 +252,8 @@ public class Game {
 	                if (guess.length() == 1) {
 	
 	                    if (triedLetters.contains(guess.toUpperCase())) {
-	                        current_Player.send("Essa letra já foi tentada.");
-	                        updateScore(playerIndex, -1);
+	                        current_Player.send("This letter has already been tried.");
+	                        updatePlayerScore(playerIndex, -1);
 	                        turn++;
 	                        continue;
 	
@@ -266,13 +266,13 @@ public class Game {
 	                    if (!correctL) {
 	                    	livesPart--;
 	                    	
-	                        broadcast(" >Jogador " + (playerIndex + 1) + " errou! \n"
-	                        		+ " >Vidas restantes: " + livesPart
+	                        broadcast(" >Player " + (playerIndex + 1) + " failed! \n"
+	                        		+ " >Remaining lives: " + livesPart
 	                        		+ "\n");
-	                        updateScore(playerIndex, -2);
+	                        updatePlayerScore(playerIndex, -2);
 	                    } else {                    	
-	                        broadcast(" >Jogador " + (playerIndex + 1) + " acertou!");
-	                        updateScore(playerIndex, 10);
+	                        broadcast(" >Player " + (playerIndex + 1) + " got it right!");
+	                        updatePlayerScore(playerIndex, 10);
 	                    }
 	
 	                } else {                    	
@@ -284,15 +284,15 @@ public class Game {
 		                    		livesPart--;
 		                    	}
 		
-		                        broadcast(" >Jogador " + (playerIndex + 1) + " tentou adivinhar sem sucesso! \n"
-		                        		+ " >Vidas restantes: " + livesPart
+		                        broadcast(" >Player " + (playerIndex + 1) + " tried to guess but was unsuccessful! \n"
+		                        		+ " >Remaining lives: " + livesPart
 		                        		+ "\n");
-		                        updateScore(playerIndex, -25);
+		                        updatePlayerScore(playerIndex, -25);
 		                    } else {
 		                    	
-		                        broadcast(" >Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n"
-		                        		+ " >Muitos parabéns!\n");
-		                        updateScore(playerIndex, 70);
+		                        broadcast(" >Player " + (playerIndex + 1) + " guessed the word!\n"
+		                        		+ " >Congratulations!\n");
+		                        updatePlayerScore(playerIndex, 70);
 		                    }
 	                    }
 	                turn++;
@@ -301,15 +301,15 @@ public class Game {
                 	if(numPlayers>1) {
                 		current_Player.getSocket().setSoTimeout(0);
                 		turn++;
-                		broadcast("Tempo de jogo do Jogador " + playerIndex + " terminou. (15s)\n");
-                		updateScore(playerIndex, -2);
+                		broadcast("Player " + playerIndex + " game time has ended. (15s)\n");
+                		updatePlayerScore(playerIndex, -2);
                 	}                	
                 }
             
             }
 
-            broadcast(Menus.gerarTabelaPontuacao("RANKING FINAL - FIM DE JOGO", players, scores));
-            broadcast(Menus.printFimJogo(word.isGuessed(), word.toString()));
+            broadcast(Menus.generateScoreboard("FINAL RANKING - GAME ENDED", players, scores));
+            broadcast(Menus.printEndGame(word.isGuessed(), word.toString()));
 
         } catch (Exception e) {
             System.out.println("Game error: " + e.getMessage());

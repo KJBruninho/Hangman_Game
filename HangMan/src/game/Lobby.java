@@ -18,7 +18,7 @@ public class Lobby extends Thread {
     }
     
 //Methods
-    public void escolhaMenu(int choice) throws Exception {
+    public void chooseMenu(int choice) throws Exception {
         switch (choice) {
             case 1:
                 msg.send(Menus.printGameLogo());
@@ -26,11 +26,11 @@ public class Lobby extends Thread {
                 rooms.add(room); 
                 room.enterRoom(this.msg);
                 room.join();
-                processarPosJogo();
+                processEndGame();
                 break;
             case 2:
                 msg.send(listRoomsInd());
-                msg.send(" >Introduza o numero (ou pressione Enter para voltar):");
+                msg.send(" > Enter a number (or press Enter to go back):");
                 Object received2 = msg.receive();
                 if (received2 == null) return;
                 try {
@@ -39,7 +39,7 @@ public class Lobby extends Thread {
                 		roomsInd.get(id).enterRoom(this.msg);
                 		roomsInd.get(id).join();
                 		if(roomsInd.get(id).getinGame())
-                			processarPosJogo();
+                			processEndGame();
                 	}
                 }catch(Exception e){
                 	return;
@@ -47,7 +47,7 @@ public class Lobby extends Thread {
                 break;
             case 3:
                 msg.send(listRoomsPart());
-                msg.send(" >Introduza o numero:");
+                msg.send(" > Enter a number:");
                 Object received3 = msg.receive();
                 if (received3 == null) return;
                 try {
@@ -56,14 +56,14 @@ public class Lobby extends Thread {
                 		roomsPart.get(id).enterRoom(this.msg);
                 		roomsPart.get(id).join();
                 		if(roomsPart.get(id).getinGame())
-                			processarPosJogo();
+                			processEndGame();
                 	}
                 }catch(Exception e){
                 	return;
                 }
                 break;
             case 4:
-            	msg.send("Introduza a capacidade da sala:");
+            	msg.send("Enter the room capacity:");
             	
             	Object capReceived = msg.receive();
             	if (capReceived == null) return;
@@ -72,15 +72,15 @@ public class Lobby extends Thread {
             	try {
             		capacity = Integer.parseInt((String) capReceived);
             	} catch (NumberFormatException e) {
-            		msg.send("Valor invalido.");
+            		msg.send("Invalid Value.");
             		break;
             	}
             	
-            	msg.send(Menus.printDificuldade());
+            	msg.send(Menus.printDifficulty());
             	
             	int option1 = Integer.parseInt((String) msg.receive());
             	
-            	msg.send(Menus.printTipoSala());
+            	msg.send(Menus.printRoomType());
             	
             	int option2 = Integer.parseInt((String) msg.receive());
             	
@@ -94,7 +94,7 @@ public class Lobby extends Thread {
             		roomsPart.add(newRoom);
             	newRoom.enterRoom(this.msg);
             	newRoom.join();
-            	processarPosJogo();
+            	processEndGame();
             	break;
             case 9:
                 msg.getSocket().close();
@@ -110,13 +110,13 @@ public class Lobby extends Thread {
     			roomsPart.remove(room);
     	}
         if (roomsPart.isEmpty()) 
-        	return " Nao existem salas disponiveis.\n"
-        		 + " Precione Enter tecla para voltar.\n";
+        	return " There are no rooms available.\n"
+        		 + " Press Enter key to go back.\n";
         
-        StringBuilder res = new StringBuilder("\nSalas:\n");
+        StringBuilder res = new StringBuilder("\nRooms:\n");
         
         for (int i = 0; i < roomsPart.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
+            res.append("Room ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
 	}
@@ -127,18 +127,18 @@ public class Lobby extends Thread {
     			roomsInd.remove(room);
     	}
         if (roomsInd.isEmpty()) 
-        	return " Nao existem salas disponiveis.\n"
-        		 + " Precione Enter tecla para voltar.\n";
+        	return " There are no rooms available.\n"
+        		 + " Press Enter key to go back.\n";
         
-        StringBuilder res = new StringBuilder("\nSalas:\n");
+        StringBuilder res = new StringBuilder("\n:\n");
         
         for (int i = 0; i < roomsInd.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
+            res.append("Room ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
         }
         return res.toString();
     }
 
-    private synchronized void processarPosJogo() throws Exception {
+    private synchronized void processEndGame() throws Exception {
         Object res = msg.receive(); 
         if (res != null && res.toString().equals("9")) {
         	msg.getSocket().close();
@@ -161,10 +161,10 @@ public class Lobby extends Thread {
                 msg.send(Menus.printMenuLobby());
                 Object input = msg.receive();
                 if (input == null) break;
-                escolhaMenu(Integer.parseInt((String) input));
+                chooseMenu(Integer.parseInt((String) input));
             }
         } catch (Exception e) {
-            System.out.println("Lobby encerrado.");
+            System.out.println("Lobby terminated.");
         }
     }
 }
