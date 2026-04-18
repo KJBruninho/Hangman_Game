@@ -17,9 +17,9 @@ public class Room extends Thread {
     private long startTime;
     private final long maxWaitTime = 60000;
 
-// Constructors    
+//Constructors    
     public Room(int size,int difficulty) {
-    	// Ensure capacity is within valid limits
+		//Ensures that the room capacity is between 1 and MAX_CAPACITY.
     	if(size>MAX_CAPACITY || size<1) {
     		this.capacity = MAX_CAPACITY;  
     	}else {
@@ -33,7 +33,7 @@ public class Room extends Thread {
         start();
     }
     
-// Getters
+//Getters and Setters    
     public int getDifficulty() { 
     	return difficulty; 
     }
@@ -60,53 +60,56 @@ public class Room extends Thread {
     		return "Difficulty: Hard";
     	default:
     		return "Difficulty: Random";
+    				
     	}
     }
 
-// Methods
+//Methods
     public void enterRoom(Message playerMsg) throws IOException {
         try {
-            // Control room capacity using semaphore
             if (!sem.tryAcquire()) {
-                playerMsg.send("Room is full!");
+                playerMsg.send("The room is full!");
                 return;
             }
          
             synchronized (this) { 
             	players[numPlayers++] = playerMsg;
 
-                broadcast("Player " + numPlayers + " joined the room (" + numPlayers + "/" + capacity + ").");
+                broadcast("Player"+ numPlayers + "  in the room (" + numPlayers + "/" + capacity + " players).");
                
                 if (numPlayers < capacity) {
-                    playerMsg.send(" Waiting for players or timeout...\n");
+                    playerMsg.send(" Wait for the room to be filled or for the wait time to expire.\n");
                 }
                 
                 notifyAll();
             }
 
         } catch (Exception e) {
-            System.err.println("Error entering room: " + e.getMessage());
+            System.err.println("Room error: " + e.getMessage());
         }
     }
     
+	//Removes a player from the room and updates the number of players.
+	//Note: This mehod only equals the numPlayers to 0, since the LobbyThread only 
+	// 		checks if numPlayers is 0 to remove the room from the list of rooms.
+	// 		The Garbage Collector will handle the rest of the cleanup after the room is removed.
     public synchronized void exitRoom(Message player) {
-        numPlayers = 0;      
+        numPlayers=0;      
     }
 
-// Send message to all players in room
     private void broadcast(String text) {
         for (Message p : players) {
             if (p != null) { 
                 try {
                     p.send(text);
                 } catch (IOException e) {
-                    System.out.println("Broadcast error: " + e.getMessage());
+                    System.out.println("Room broadcast error: " + e.getMessage());
                 }
             }
         }
     }
 
-// Thread execution (room life cycle)
+//Overridden Methods   
     @Override
     public void run() {
     	synchronized (this) {
@@ -114,17 +117,14 @@ public class Room extends Thread {
     			long now = System.currentTimeMillis();
     			long elapsed = now - startTime;
     			
-    			// Start game if room is full
     			if (numPlayers == capacity) {
     				break;
     			}
     			
-    			// Start if enough players and timeout reached
     			if (numPlayers >= 2 && elapsed >= maxWaitTime) {
     				break;
     			}
     			
-    			// Cancel room if not enough players after timeout
     	    	if(numPlayers < 2 && elapsed >= maxWaitTime) {
     	    		this.exitRoom(players[0]);
     	    		return;
@@ -142,9 +142,7 @@ public class Room extends Thread {
     	
     	inGame = true;
 
-    	// Start game
     	broadcast("Game is starting!\n");
-
     	switch(difficulty) {
     		case 1:
     			new Game(players,difficulty).play(0);

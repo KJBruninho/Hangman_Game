@@ -11,19 +11,19 @@ public class Connection extends Thread {
 	private Socket s;
 	private Lobby l;
 	
-// Constructors
+//Constructors
 	public Connection(){
 		super();
-		start(); // Starts the thread
+		start();
 	}
 	 
 	public Connection(Socket s){
 		super();
 		this.s = s;
-		start(); // Starts the thread with client socket
+		start();
 	}
 
-// Getters and Setters
+//Getters e Setters
 	public Lobby getLobby() {
 		return l;
 	}
@@ -32,21 +32,17 @@ public class Connection extends Thread {
 		this.l = l;
 	}
 
-// Overridden Methods 	
+//Overrided Methods 	
 	@Override
     public void run () {
     	try {
-    		// Handles communication with the client
     		Message msg = new Message(s);
-    		
-    		msg.send(" > New player! Welcome.");
-    		msg.send(" > Joining a lobby..."); 
-    		
-    		// Client creates a lobby
+    		msg.send("	> Novo jogador! Seja bem-vindo.");
+    		msg.send("	> A entrar num Lobby..."); 
     		setLobby(new Lobby(msg));
     		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
     }
-}
+} 

@@ -7,27 +7,26 @@ public class Client_Read extends Thread {
     private Socket s;
     private Message msg;
 
-// Constructors    
+//Constructors    
     public Client_Read(Socket s, Message msg) {
         this.s = s;
         this.msg = msg;
-        start(); // Starts read thread
+        start();
     }
     
-// Overridden Methods
+//Overridden Methods
     @Override
     public void run() {
         try {
             while (!s.isClosed()) { 
-                // Receives messages from server
+                //Receives messages using the Message class's receive method and prints them to the console after converting them to strings. 
+                //If the received object is null, it simply continues without printing.
                 Object received = msg.receive();
-                
                 if (received != null) {
                     System.out.println(received.toString());
                 }
             }
         } catch (Exception e) {
-            // Indicates connection was closed
             System.out.println("Connection closed.");
         }
     }

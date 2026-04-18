@@ -18,7 +18,13 @@ public class Lobby extends Thread {
     }
     
 //Methods
-//Choose game mode
+    //Handles the user'schoice and directs them to the appropriate game mode.
+    //Note: Join is used to wait for the game thread to finish before returning to the lobby menu.
+    //      After the game ends, it calls processEndGame to handle post-game cleanup.
+    //      This ensures that after a game finishes, the player can returned to the lobby 
+    //      menu instead of exiting the application. The join method will block until the 
+    //      game thread finishes, allowing for proper synchronization between the lobby and 
+    //      game threads. The same logic applies to the other cases where join is used.
     public void chooseMenu(int choice) throws Exception {
         switch (choice) {
             case 1:
@@ -29,7 +35,6 @@ public class Lobby extends Thread {
                 room.join();
                 processEndGame();
                 break;
-
             case 2:
                 msg.send(listRoomsInd());
                 msg.send(" >Enter room number (or press Enter to go back):");
@@ -47,7 +52,6 @@ public class Lobby extends Thread {
                 	return;
                 }
                 break;
-
             case 3:
                 msg.send(listRoomsPart());
                 msg.send(" >Enter room number:");
@@ -65,9 +69,8 @@ public class Lobby extends Thread {
                 	return;
                 }
                 break;
-
             case 4:
-            	msg.send("Enter room capacity:");
+            	msg.send("Enter the room capacity:");
             	
             	Object capReceived = msg.receive();
             	if (capReceived == null) return;
@@ -88,6 +91,7 @@ public class Lobby extends Thread {
             	
             	int option2 = Integer.parseInt((String) msg.receive());
             	
+            	
             	msg.send(Menus.printGameLogo());
             	
             	Room newRoom = new Room(capacity,option1);
@@ -99,30 +103,27 @@ public class Lobby extends Thread {
             	newRoom.join();
             	processEndGame();
             	break;
-
             case 9:
                 msg.getSocket().close();
                 break;
-
             default:
             	return;
         } 
     }
 
     private Object listRoomsPart() {
-    	// Remove empty rooms
+        // Removes empty rooms
     	for(Room room : roomsPart) {
     		if(room.getNumPlayers()==0)
     			roomsPart.remove(room);
     	}
-
         if (roomsPart.isEmpty()) 
         	return " No rooms available.\n Press Enter to go back.\n";
         
         StringBuilder res = new StringBuilder("\nRooms:\n");
         
         for (int i = 0; i < roomsPart.size(); i++) {
-            res.append("Room ").append(i)
+                res.append("Room ").append(i)
                .append(" | ").append(roomsPart.get(i).getNumPlayers())
                .append("/").append(roomsPart.get(i).getCapacity())
                .append(" | ").append(roomsPart.get(i).getPrintDifficulty())
@@ -132,34 +133,31 @@ public class Lobby extends Thread {
 	}
 
 	private String listRoomsInd() {
-    	// Remove empty rooms
+        // Removes empty rooms
     	for(Room room : roomsInd) {
     		if(room.getNumPlayers()==0)
     			roomsInd.remove(room);
     	}
-
         if (roomsInd.isEmpty()) 
         	return " No rooms available.\n Press Enter to go back.\n";
         
         StringBuilder res = new StringBuilder("\nRooms:\n");
         
         for (int i = 0; i < roomsInd.size(); i++) {
-            res.append("Room ").append(i)
+                res.append("Room ").append(i)
                .append(" | ").append(roomsInd.get(i).getNumPlayers())
                .append("/").append(roomsInd.get(i).getCapacity())
                .append(" | ").append(roomsInd.get(i).getPrintDifficulty())
-               .append("\n");
-        }
+               .append("\n");}
         return res.toString();
     }
 
+    //Ensures that concurrent threads do not interfere with each will accessing the Rooms Array.
     private synchronized void processEndGame() throws Exception {
         Object res = msg.receive(); 
         if (res != null && res.toString().equals("9")) {
         	msg.getSocket().close();
         }
-
-        // Clean up rooms after game ends
     	for(Room room : roomsPart) {
     		if(roomsPart.contains(room));
     			roomsPart.remove(room);
@@ -170,7 +168,7 @@ public class Lobby extends Thread {
     	}
     }
         
-// Thread loop
+//Overrided Methods 
     @Override
     public void run() {
     	try {
@@ -181,7 +179,7 @@ public class Lobby extends Thread {
                 chooseMenu(Integer.parseInt((String) input));
             }
         } catch (Exception e) {
-            System.out.println("Lobby closed.");
+            System.out.println("Lobby encerrado.");
         }
     }
 }
