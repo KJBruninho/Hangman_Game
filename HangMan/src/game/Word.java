@@ -14,10 +14,11 @@ public class Word {
     private static final String[] FILE_PATH = {"palavrasF.txt","palavrasM.txt","palavrasD.txt"};
     private static final Random RANDOM = new Random();
 
-//Constructors    
+// Constructors    
     public Word(int difficulty) {
         List<String> linhas = null;
         try {
+            // Load word list based on difficulty
             switch (difficulty) {
                 case 1:
                     linhas = Files.readAllLines(Paths.get(FILE_PATH[0]));
@@ -37,15 +38,16 @@ public class Word {
             }
 
             if (linhas == null || linhas.isEmpty()) {
-                throw new IOException("O ficheiro de palavras está vazio ou não foi carregado.");
+                throw new IOException("Word file is empty or not loaded.");
             }
 
-            String escolhida = linhas.get(RANDOM.nextInt(linhas.size())).trim();
-            this.palavra = escolhida.split("");
+            // Pick random word
+            String chosen = linhas.get(RANDOM.nextInt(linhas.size())).trim();
+            this.palavra = chosen.split("");
 
         } catch (IOException e) {
-            System.err.println("Erro ao carregar palavras: " + e.getMessage());
-            // Fallback caso o ficheiro falhe
+            System.err.println("Error loading words: " + e.getMessage());
+            // Fallback word
             this.palavra = new String[]{"j", "a", "v", "a"};
         }
 
@@ -53,11 +55,12 @@ public class Word {
         Arrays.fill(this.guess, "_");
     }
 
-//Methods    
+// Methods    
     public String printGuess() {
         return String.join(" ", this.guess);
     }
-
+    
+ // Check if letter exists in word
     public boolean guessLetter(String letter) {
         boolean found = false;
         if (letter == null || letter.isEmpty()) return false;
@@ -71,7 +74,8 @@ public class Word {
         }
         return found;
     }
-
+    
+ // Compare a full word with the guess
     public boolean guessWord(String word) {
         if (word == null) return false;
         
@@ -83,12 +87,13 @@ public class Word {
         
         return correct;
     }
-
+    
+ // Check if the entire word has been guessed
     public boolean isGuessed() {
         return Arrays.equals(palavra, guess);
     }
     
-//Overrided Methods
+// Overridden Methods
     @Override
     public String toString() {
         return String.join("", this.palavra).toLowerCase();
@@ -101,6 +106,4 @@ public class Word {
         Word other = (Word) obj;
         return Arrays.equals(this.palavra, other.palavra);
     }
-
-
 }

@@ -3,6 +3,7 @@ package server;
 public final class Origin {
 
 	public static void main(String[] args ) {
+		 //Application starts the server
 		new Server();
 		}
 	 

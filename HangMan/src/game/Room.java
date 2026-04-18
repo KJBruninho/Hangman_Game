@@ -17,8 +17,9 @@ public class Room extends Thread {
     private long startTime;
     private final long maxWaitTime = 60000;
 
-//Constructors    
+// Constructors    
     public Room(int size,int difficulty) {
+    	// Ensure capacity is within valid limits
     	if(size>MAX_CAPACITY || size<1) {
     		this.capacity = MAX_CAPACITY;  
     	}else {
@@ -32,7 +33,7 @@ public class Room extends Thread {
         start();
     }
     
-//Getters and Setters    
+// Getters
     public int getDifficulty() { 
     	return difficulty; 
     }
@@ -52,59 +53,60 @@ public class Room extends Thread {
     public String getPrintDifficulty() {
     	switch (this.getDifficulty()) {
     	case 1:
-    		return "Dificuldade: Facil";
+    		return "Difficulty: Easy";
     	case 2:
-    		return "Dificuldade: Media";
+    		return "Difficulty: Medium";
     	case 3:
-    		return "Dificuldade: Dificil";
+    		return "Difficulty: Hard";
     	default:
-    		return "Dificuldade: Aleatorio";
-    				
+    		return "Difficulty: Random";
     	}
     }
 
-//Methods
+// Methods
     public void enterRoom(Message playerMsg) throws IOException {
         try {
+            // Control room capacity using semaphore
             if (!sem.tryAcquire()) {
-                playerMsg.send("A sala está cheia!");
+                playerMsg.send("Room is full!");
                 return;
             }
          
             synchronized (this) { 
             	players[numPlayers++] = playerMsg;
 
-                broadcast("Player"+ numPlayers + "  na sala (" + numPlayers + "/" + capacity + " jogadores).");
+                broadcast("Player " + numPlayers + " joined the room (" + numPlayers + "/" + capacity + ").");
                
                 if (numPlayers < capacity) {
-                    playerMsg.send(" Aguarde o preenchimento da sala ou o fim do tempo de espera.\n");
+                    playerMsg.send(" Waiting for players or timeout...\n");
                 }
                 
                 notifyAll();
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao entrar na sala: " + e.getMessage());
+            System.err.println("Error entering room: " + e.getMessage());
         }
     }
     
     public synchronized void exitRoom(Message player) {
-        numPlayers=0;      
+        numPlayers = 0;      
     }
 
+// Send message to all players in room
     private void broadcast(String text) {
         for (Message p : players) {
             if (p != null) { 
                 try {
                     p.send(text);
                 } catch (IOException e) {
-                    System.out.println("Erro no broadcast: " + e.getMessage());
+                    System.out.println("Broadcast error: " + e.getMessage());
                 }
             }
         }
     }
 
-//Overrided Methods    
+// Thread execution (room life cycle)
     @Override
     public void run() {
     	synchronized (this) {
@@ -112,14 +114,17 @@ public class Room extends Thread {
     			long now = System.currentTimeMillis();
     			long elapsed = now - startTime;
     			
+    			// Start game if room is full
     			if (numPlayers == capacity) {
     				break;
     			}
     			
+    			// Start if enough players and timeout reached
     			if (numPlayers >= 2 && elapsed >= maxWaitTime) {
     				break;
     			}
     			
+    			// Cancel room if not enough players after timeout
     	    	if(numPlayers < 2 && elapsed >= maxWaitTime) {
     	    		this.exitRoom(players[0]);
     	    		return;
@@ -137,7 +142,9 @@ public class Room extends Thread {
     	
     	inGame = true;
 
-    	broadcast("O jogo vai começar!\n");
+    	// Start game
+    	broadcast("Game is starting!\n");
+
     	switch(difficulty) {
     		case 1:
     			new Game(players,difficulty).play(0);

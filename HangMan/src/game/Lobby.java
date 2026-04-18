@@ -18,6 +18,7 @@ public class Lobby extends Thread {
     }
     
 //Methods
+//Choose game mode
     public void chooseMenu(int choice) throws Exception {
         switch (choice) {
             case 1:
@@ -28,9 +29,10 @@ public class Lobby extends Thread {
                 room.join();
                 processEndGame();
                 break;
+
             case 2:
                 msg.send(listRoomsInd());
-                msg.send(" >Introduza o numero (ou pressione Enter para voltar):");
+                msg.send(" >Enter room number (or press Enter to go back):");
                 Object received2 = msg.receive();
                 if (received2 == null) return;
                 try {
@@ -45,9 +47,10 @@ public class Lobby extends Thread {
                 	return;
                 }
                 break;
+
             case 3:
                 msg.send(listRoomsPart());
-                msg.send(" >Introduza o numero:");
+                msg.send(" >Enter room number:");
                 Object received3 = msg.receive();
                 if (received3 == null) return;
                 try {
@@ -62,8 +65,9 @@ public class Lobby extends Thread {
                 	return;
                 }
                 break;
+
             case 4:
-            	msg.send("Introduza a capacidade da sala:");
+            	msg.send("Enter room capacity:");
             	
             	Object capReceived = msg.receive();
             	if (capReceived == null) return;
@@ -72,7 +76,7 @@ public class Lobby extends Thread {
             	try {
             		capacity = Integer.parseInt((String) capReceived);
             	} catch (NumberFormatException e) {
-            		msg.send("Valor invalido.");
+            		msg.send("Invalid value.");
             		break;
             	}
             	
@@ -83,7 +87,6 @@ public class Lobby extends Thread {
             	msg.send(Menus.printRoomType());
             	
             	int option2 = Integer.parseInt((String) msg.receive());
-            	
             	
             	msg.send(Menus.printGameLogo());
             	
@@ -96,44 +99,56 @@ public class Lobby extends Thread {
             	newRoom.join();
             	processEndGame();
             	break;
+
             case 9:
                 msg.getSocket().close();
                 break;
+
             default:
             	return;
         } 
     }
 
     private Object listRoomsPart() {
+    	// Remove empty rooms
     	for(Room room : roomsPart) {
     		if(room.getNumPlayers()==0)
     			roomsPart.remove(room);
     	}
+
         if (roomsPart.isEmpty()) 
-        	return " Nao existem salas disponiveis.\n"
-        		 + " Precione Enter tecla para voltar.\n";
+        	return " No rooms available.\n Press Enter to go back.\n";
         
-        StringBuilder res = new StringBuilder("\nSalas:\n");
+        StringBuilder res = new StringBuilder("\nRooms:\n");
         
         for (int i = 0; i < roomsPart.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(roomsPart.get(i).getNumPlayers()).append("/").append(roomsPart.get(i).getCapacity()).append(" | ").append(roomsPart.get(i).getPrintDifficulty()).append("\n");
+            res.append("Room ").append(i)
+               .append(" | ").append(roomsPart.get(i).getNumPlayers())
+               .append("/").append(roomsPart.get(i).getCapacity())
+               .append(" | ").append(roomsPart.get(i).getPrintDifficulty())
+               .append("\n");
         }
         return res.toString();
 	}
 
 	private String listRoomsInd() {
+    	// Remove empty rooms
     	for(Room room : roomsInd) {
     		if(room.getNumPlayers()==0)
     			roomsInd.remove(room);
     	}
+
         if (roomsInd.isEmpty()) 
-        	return " Nao existem salas disponiveis.\n"
-        		 + " Precione Enter tecla para voltar.\n";
+        	return " No rooms available.\n Press Enter to go back.\n";
         
-        StringBuilder res = new StringBuilder("\nSalas:\n");
+        StringBuilder res = new StringBuilder("\nRooms:\n");
         
         for (int i = 0; i < roomsInd.size(); i++) {
-            res.append("Sala ").append(i).append(" | ").append(roomsInd.get(i).getNumPlayers()).append("/").append(roomsInd.get(i).getCapacity()).append(" | ").append(roomsInd.get(i).getPrintDifficulty()).append("\n");
+            res.append("Room ").append(i)
+               .append(" | ").append(roomsInd.get(i).getNumPlayers())
+               .append("/").append(roomsInd.get(i).getCapacity())
+               .append(" | ").append(roomsInd.get(i).getPrintDifficulty())
+               .append("\n");
         }
         return res.toString();
     }
@@ -143,6 +158,8 @@ public class Lobby extends Thread {
         if (res != null && res.toString().equals("9")) {
         	msg.getSocket().close();
         }
+
+        // Clean up rooms after game ends
     	for(Room room : roomsPart) {
     		if(roomsPart.contains(room));
     			roomsPart.remove(room);
@@ -153,7 +170,7 @@ public class Lobby extends Thread {
     	}
     }
         
-//Overrided Methods 
+// Thread loop
     @Override
     public void run() {
     	try {
@@ -164,7 +181,7 @@ public class Lobby extends Thread {
                 chooseMenu(Integer.parseInt((String) input));
             }
         } catch (Exception e) {
-            System.out.println("Lobby encerrado.");
+            System.out.println("Lobby closed.");
         }
     }
 }
