@@ -65,7 +65,6 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 ```
 ## 📁 Estrutura do Projeto
 
-```
 HangMan/
 │
 ├── bin/                     # Ficheiros compilados (.class)
@@ -105,7 +104,7 @@ HangMan/
 ├── .classpath               # Configuração do projeto Java
 ├── .project                 # Configuração do IDE (ex: Eclipse)
 └── README.md                # Documentação do projeto
-```
+
 
 ```
 
