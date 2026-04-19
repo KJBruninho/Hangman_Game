@@ -156,15 +156,15 @@ This project was developed to:
 
 ## Authors
 
-* Bruno Marinho
+* [Bruno Marinho](https://github.com/KJBruninho)
 * Denise Brandão
-* Miguel Lameiras
+* [Miguel Lameiras](https://github.com/MiguelxLameiras)
 
 ---
 
 ## Reviewers
 
-* Bruno Marinho
-* Manuel Salvador Santos
-* Miguel Lameiras
+* [Bruno Marinho](https://github.com/KJBruninho)
+* [Manuel Salvador Santos](https://github.com/S4vior)
+* [Miguel Lameiras](https://github.com/MiguelxLameiras)
 * Tânia Lopes Marinho
