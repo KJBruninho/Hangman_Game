@@ -91,7 +91,6 @@ HangMan/
 │       ├── Menus.java
 │       └── Message.java
 │
-├── palavras.txt             # Lista principal de palavras
 ├── palavrasD.txt            # Palavras - dificuldade D
 ├── palavrasF.txt            # Palavras - dificuldade F
 ├── palavrasM.txt            # Palavras - dificuldade M
