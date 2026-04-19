@@ -170,7 +170,7 @@ Este projeto foi desenvolvido para:
 
 * Bruno Marinho
 * Miguel Lameiras
-* Tânia Marinho
+* Tânia Lopes Marinho
 
 ---
 
