@@ -169,6 +169,7 @@ Este projeto foi desenvolvido para:
 ## Revisor
 
 * Bruno Marinho
+* Manuel Salvador Santos
 * Miguel Lameiras
 * Tânia Lopes Marinho
 
