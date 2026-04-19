@@ -50,7 +50,7 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 * Java
 * PowerShell
