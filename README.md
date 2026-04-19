@@ -1,56 +1,53 @@
-# Hangman Game (Jogo da Forca)
+# Hangman Game
 
-## Descrição do Projeto
+## Project Description
 
-Este projeto consiste na implementação do clássico **Jogo da Forca** utilizando a linguagem **Java**.
-O objetivo deste Jogo da Forca em modo multijogador síncrono, no qual 2 a 4 jogadores participam em simultâneo,é colaborar na tentativa de descobrir uma palavra oculta comum.
-Existe também uma vertente mais competitiva no jogo com a implementacao de um sistema de pontos que faz com que este jogo se torne mais competitivo e acrescente um nivell de estratégia maior.
+This project consists of an implementation of the classic **Hangman Game** using **Java**.
+The objective is to provide a synchronous multiplayer Hangman experience where 2 to 4 players participate simultaneously, collaborating to discover a common hidden word.
+The game also features a competitive edge with an implemented scoring system, adding strategy and engagement to the cooperative gameplay.
 
-O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fundamentais de programação como:
+This project was developed for educational purposes, allowing the practice of fundamental programming concepts such as:
 
-* Estruturas de controlo (if/else)
-* Ciclos (loops)
-* Manipulação de strings
-* Listas
-* Funções
-* Entrada e saída de dados
-* Concorrência
-
----
-
-## Como o Jogo Funciona
-
-1. O programa escolhe uma palavra aleatória a partir de uma lista.
-2. O jogador tenta adivinhar a palavra introduzindo letras.
-3. Se a letra estiver correta:
-
-   * Ela é revelada na posição correspondente.
-4. Se a letra estiver errada:
-
-   * O jogador perde uma vida.
-5. O jogo termina quando:
-
-   * O jogador adivinha todas as letras ou a palavra (vitória)
-   * O número de vidas chega a zero (derrota)
+* Control structures (if/else)
+* Loops
+* String manipulation
+* Lists
+* Functions
+* Input and output (I/O)
+* Concurrency
 
 ---
 
-## Funcionalidades
+## How the Game Works
 
-* Seleção aleatória de palavras
-* Sistema de vidas
-* Sistema de pontos
-* Verificação de letras repetidas
-* Broadcasts e Mensagens unicas devidamente sincronizadas
-* Tratamento de erros de desconexão
-* Atualização dinâmica da palavra
-* Condição de vitória e derrota
-* Interface em consola
-* Estrutura modular do código
+1. The program selects a random word from a predefined list.
+2. Players attempt to guess the word by entering letters.
+3. If the letter is correct:
+   * It is revealed in its corresponding position(s).
+4. If the letter is incorrect:
+   * The player loses a life.
+5. The game ends when:
+   * The players guess all the letters or the full word (Victory).
+   * The number of lives reaches zero (Defeat).
 
 ---
 
-## Tecnologias Utilizadas
+## Features
+
+* Random word selection
+* Life/Health system
+* Scoring system
+* Duplicate letter verification
+* Synchronized broadcasts and unique messaging
+* Disconnection error handling
+* Dynamic word updates
+* Victory and defeat conditions
+* Console-based interface
+* Modular code structure
+
+---
+
+## Technologies Used
 
 * Java
 * PowerShell
@@ -59,11 +56,10 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 
 ---
 
-## Estrutura do Projeto
-
-```
+## Project Structure
 ## 📁 Estrutura do Projeto
 
+```
 HangMan/
 │
 ├── bin/                     # Ficheiros compilados (.class)
@@ -109,21 +105,21 @@ HangMan/
 
 ---
 
-## Como Executar o Projeto
+## How to Run the Project
 
-### 1. Clonar o repositório
+### 1. Clone the repository
 
-```
+```bash
 git clone https://github.com/KJBruninho/Hangman_Game.git
 ```
 
-### 2. Entrar na pasta do projeto
+### 2. Enter the project directory
 
 ```
 cd Hangman_Game
 ```
 
-### 3. Executar o jogo
+### 3. Run the game
 
 ```
 ./run_Hangman.sh
@@ -134,44 +130,41 @@ run_Hangman.bat
 ```
 ---
 
-## Objetivos de Aprendizagem
+## Learning Objectives
 
-Este projeto foi desenvolvido para:
+This project was developed to:
 
-* Praticar lógica de programação
-* Compreender estruturas de decisão
-* Trabalhar com ciclos e listas
-* Aprender a organizar código em módulos
-* Aprender a lidar com concorrencia
-* Desenvolver um pequeno jogo em consola
+* Practice programming logic
+* Understand decision structures
+* Work with loops and lists
+* Learn to organize code into modules
+* Learn to handle concurrency
+* Develop a small console-based game
+
+---
+
+## Future Improvements
+
+* Graphical User Interface (GUI)
+* Improved difficulty levels
+* Enhanced scoring systems
+* Support for multiple languages
+* Save game history
+* Room replay and reuse
 
 ---
 
-## Possíveis Melhorias Futuras
-
-* Interface gráfica (GUI)
-* Níveis de dificuldade melhorados
-* Sistema de pontuação melhorados
-* Suporte a diferentes idiomas
-* Guardar histórico de jogos
-* Replay e reutilizacao de salas
-
----
-## Autor
+## Authors
 
 * Bruno Marinho
-* Denise Brandão 
+* Denise Brandão
 * Miguel Lameiras
 
 ---
 
----
-## Revisor
+## Reviewers
 
 * Bruno Marinho
 * Manuel Salvador Santos
 * Miguel Lameiras
 * Tânia Lopes Marinho
-
----
-
