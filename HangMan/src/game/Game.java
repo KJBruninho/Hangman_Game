@@ -179,7 +179,7 @@ public class Game {
                     // and penalizes the player by deducting points.
                     //Note: Resets the timeout to avoid infinite waiting loop.
                     current_Player.getSocket().setSoTimeout(0);
-                    broadcast("Player time " + (playerIndex + 1) + " has terminated. (15s)\n");
+                    broadcast("Player " + (playerIndex + 1) + "time has terminated. (15s)\n");
                     updateSelfScore(playerIndex, -2);
                     turn++;
                 } catch (IOException e) {
