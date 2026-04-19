@@ -159,11 +159,10 @@ Este projeto foi desenvolvido para:
 * Replay e reutilizacao de salas
 
 ---
-
 ## 👨‍💻 Autor
 
-Bruno Marinho
-Miguel Lameiras
+* Bruno Marinho
+* Miguel Lameiras
 
 ---
 
