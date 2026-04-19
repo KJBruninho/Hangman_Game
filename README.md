@@ -1,6 +1,6 @@
-# 🎮 Hangman Game (Jogo da Forca)
+# Hangman Game (Jogo da Forca)
 
-## 📌 Descrição do Projeto
+## Descrição do Projeto
 
 Este projeto consiste na implementação do clássico **Jogo da Forca** utilizando a linguagem **Java**.
 O objetivo deste Jogo da Forca em modo multijogador síncrono, no qual 2 a 4 jogadores participam em simultâneo,é colaborar na tentativa de descobrir uma palavra oculta comum.
@@ -18,7 +18,7 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 
 ---
 
-## 🧠 Como o Jogo Funciona
+## Como o Jogo Funciona
 
 1. O programa escolhe uma palavra aleatória a partir de uma lista.
 2. O jogador tenta adivinhar a palavra introduzindo letras.
@@ -35,7 +35,7 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 
 ---
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 * Seleção aleatória de palavras
 * Sistema de vidas
@@ -59,7 +59,7 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 ## 📁 Estrutura do Projeto
@@ -110,7 +110,7 @@ HangMan/
 
 ---
 
-## ▶️ Como Executar o Projeto
+## Como Executar o Projeto
 
 ### 1. Clonar o repositório
 
@@ -135,7 +135,7 @@ run_Hangman.bat
 ```
 ---
 
-## 🎯 Objetivos de Aprendizagem
+## Objetivos de Aprendizagem
 
 Este projeto foi desenvolvido para:
 
@@ -148,7 +148,7 @@ Este projeto foi desenvolvido para:
 
 ---
 
-## 🔮 Possíveis Melhorias Futuras
+## Possíveis Melhorias Futuras
 
 * Interface gráfica (GUI)
 * Níveis de dificuldade melhorados
@@ -158,9 +158,10 @@ Este projeto foi desenvolvido para:
 * Replay e reutilizacao de salas
 
 ---
-## 👨‍💻 Autor
+## Autor
 
 * Bruno Marinho
+* Denise Brandão 
 * Miguel Lameiras
 
 ---
