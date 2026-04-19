@@ -50,7 +50,7 @@ public class Game {
                 try {
                     players[i].send(text);
                 } catch (IOException e) {
-                    System.out.println("Jogador " + (i + 1) + " desconectou-se.");
+                    System.out.println("Player " + (i + 1) + " disconnected.");
                     players[i] = null;
                     numPlayers--;
                 }
@@ -116,8 +116,8 @@ public class Game {
                     broadcast("==================================================");
                     broadcast("				     Player " + (playerIndex + 1) + " turn\n");
                     
-                    int vidasAtuais = (mode == 1) ? livesPart : lives[playerIndex];
-                    current_Player.send(Menus.printLifes(vidasAtuais));
+                    int remainingLives = (mode == 1) ? livesPart : lives[playerIndex];
+                    current_Player.send(Menus.printLifes(remainingLives));
                     broadcast("Palavra:  | " + word.printGuess() + " |");
                     current_Player.send(Menus.printRoomType(triedLetters));
                     current_Player.send(" >Enter a letter or word: ");
@@ -142,33 +142,33 @@ public class Game {
                         if (!word.guessLetter(guess)) {
                             if (mode == 1) livesPart--; else lives[playerIndex]--;
                             
-                            int sobra = (mode == 1) ? livesPart : lives[playerIndex];
-                            broadcast("\n Jogador " + (playerIndex + 1) + " errou! \n Vidas restantes: " + sobra + "\n");
+                            int remaining = (mode == 1) ? livesPart : lives[playerIndex];
+                            broadcast("\n Player " + (playerIndex + 1) + " failed! \n Remaining lives: " + remaining + "\n");
                             updateSelfScore(playerIndex, (mode == 1) ? -2 : -5);
 
-                            if (sobra <= 0 && mode != 1) {
-                                broadcast("	Jogador " + (playerIndex + 1) + " foi eliminado!\n" + Menus.printLifes(0));
+                            if (remaining <= 0 && mode != 1) {
+                                broadcast("	Player " + (playerIndex + 1) + " has been eliminated!\n" + Menus.printLifes(0));
                                 updateSelfScore(playerIndex, -30);
                             }
                         } else {
-                            broadcast("\n Jogador " + (playerIndex + 1) + " acertou!");
+                            broadcast("\n Player " + (playerIndex + 1) + " got it right!");
                             updateSelfScore(playerIndex, 10);
                         }
                     } else {
                         if (!word.guessWord(guess)) {
-                            int penalizacao = (vidasAtuais > 2) ? 2 : 1;
-                            if (mode == 1) livesPart -= penalizacao; else lives[playerIndex] -= penalizacao;
+                            int penalty = (remainingLives > 2) ? 2 : 1;
+                            if (mode == 1) livesPart -= penalty; else lives[playerIndex] -= penalty;
                             
-                            int sobra = (mode == 1) ? livesPart : lives[playerIndex];
-                            broadcast("\n Jogador " + (playerIndex + 1) + " falhou a palavra! \n Vidas restantes: " + sobra + "\n");
+                            int remaining = (mode == 1) ? livesPart : lives[playerIndex];
+                            broadcast("\n Player " + (playerIndex + 1) + " failed! \n Remaining lives: " + remaining + "\n");
                             updateSelfScore(playerIndex, (mode == 1) ? -25 : -20);
 
-                            if (sobra <= 0 && mode != 1) {
-                                broadcast("	Jogador " + (playerIndex + 1) + " foi eliminado!\n" + Menus.printLifes(0));
+                            if (remaining <= 0 && mode != 1) {
+                                broadcast("	Player " + (playerIndex + 1) + " has been eliminated!\n" + Menus.printLifes(0));
                                 updateSelfScore(playerIndex, -50);
                             }
                         } else {
-                            broadcast("\n Jogador " + (playerIndex + 1) + " adivinhou a palavra!\n Parabéns!\n");
+                            broadcast("\n Player " + (playerIndex + 1) + " guessed the word!\n Congrulations!\n");
                             updateSelfScore(playerIndex, (mode == 1) ? 70 : 100);
                         }
                     }
@@ -179,12 +179,12 @@ public class Game {
                     // and penalizes the player by deducting points.
                     //Note: Resets the timeout to avoid infinite waiting loop.
                     current_Player.getSocket().setSoTimeout(0);
-                    broadcast("Tempo do Jogador " + (playerIndex + 1) + " terminou. (15s)\n");
+                    broadcast("Player time " + (playerIndex + 1) + " has terminated. (15s)\n");
                     updateSelfScore(playerIndex, -2);
                     turn++;
                 } catch (IOException e) {
                     //Prints a message to the server console,and removes the player from the game.
-                    System.out.println("Jogador " + (playerIndex + 1) + " caiu durante o turno.");
+                    System.out.println("Player " + (playerIndex + 1) + " has left.");
                     players[playerIndex] = null;
                     numPlayers--;
                     turn++;

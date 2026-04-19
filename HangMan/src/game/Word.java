@@ -41,7 +41,7 @@ public class Word {
             }
 
             String chosen = linhas.get(RANDOM.nextInt(linhas.size())).trim();
-            this.palavra = chosen.split("");
+            this.word = chosen.split("");
 
         } catch (IOException e) {
             System.err.println("Error loading words: " + e.getMessage());
