@@ -108,7 +108,6 @@ HangMan/
 
 ```
 
-*(Os nomes dos ficheiros podem variar ligeiramente conforme a implementação.)*
 
 ---
 
