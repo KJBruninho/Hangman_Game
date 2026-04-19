@@ -165,6 +165,15 @@ Este projeto foi desenvolvido para:
 
 ---
 
+---
+## Revisor
+
+* Bruno Marinho
+* Miguel Lameiras
+* Tânia Marinho
+
+---
+
 ## 📄 Licença
 
 MIT License
