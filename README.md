@@ -3,7 +3,7 @@
 ## Project Description
 
 This project consists of an implementation of the classic **Hangman Game** using **Java**.
-The objective is to provide a synchronous multiplayer Hangman experience where 2 to 4 players participate simultaneously, collaborating to discover a common hidden word.
+The objective is to provide a synchronous multiplayer Hangman experience where 1 to 4 players participate simultaneously, collaborating to discover a common hidden word.
 The game also features a competitive edge with an implemented scoring system, adding strategy and engagement to the cooperative gameplay.
 
 This project was developed for educational purposes, allowing the practice of fundamental programming concepts such as:
