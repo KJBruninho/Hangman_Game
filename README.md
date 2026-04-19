@@ -15,7 +15,7 @@ O projeto foi desenvolvido com fins educativos, permitindo praticar conceitos fu
 * Funções
 * Entrada e saída de dados
 * Concorrência
-* ...
+* etc
 
 ---
 
