@@ -157,7 +157,6 @@ This project was developed to:
 ## Authors
 
 * [Bruno Marinho](https://github.com/KJBruninho)
-* Denise Brandão
 * [Miguel Lameiras](https://github.com/MiguelxLameiras)
 
 ---
